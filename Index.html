@@ -1,0 +1,864 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Statistik Bivariat: Asosiasi, Korelasi, Regresi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=Sora:wght@700;800&display=swap">
+<style>
+:root{--bg:#F2F5F9;--ink:#13233F;--mute:#51627C;--card:#fff;--line:#D5DDE8;--acc:#1D5FD6;--accI:#fff;--ok:#0B7F5F;--okB:#DDF4EC;--bad:#B8312A;--badB:#FBE4E2;--sec:#F2A33A;--soft:#E6EEFB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1A2B;--ink:#E8EEF8;--mute:#9DB0CB;--card:#17263B;--line:#2A3C55;--acc:#6FA3FF;--accI:#0F1A2B;--ok:#3CCB9E;--okB:#12382F;--bad:#FF8A80;--badB:#42201F;--soft:#1E3250}}
+:root[data-theme="dark"]{--bg:#0F1A2B;--ink:#E8EEF8;--mute:#9DB0CB;--card:#17263B;--line:#2A3C55;--acc:#6FA3FF;--accI:#0F1A2B;--ok:#3CCB9E;--okB:#12382F;--bad:#FF8A80;--badB:#42201F;--soft:#1E3250}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Lexend,system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:10}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:18px 16px 0}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:1.45rem;line-height:1.25;margin:0 0 4px;font-weight:700}
+.sub{color:var(--mute);font-size:.9rem;margin:0 0 12px}
+nav{display:flex;gap:4px;overflow-x:auto;margin:0 -16px;padding:0 16px}
+nav button{flex:none;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:500 .92rem Lexend,system-ui,sans-serif;padding:10px 12px;cursor:pointer}
+nav button[aria-selected=true]{color:var(--acc);border-color:var(--acc)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+main{padding:20px 16px 48px}
+section[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+h2{font-size:1.15rem;margin:0 0 8px}
+h3{font-size:1rem;margin:14px 0 4px}
+p{margin:6px 0}
+.f{background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0;font-weight:500;overflow-x:auto;white-space:nowrap}
+.ex{border-left:4px solid var(--sec);padding:2px 0 2px 12px;margin:12px 0}
+.mute{color:var(--mute);font-size:.9rem}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label{font-weight:500;font-size:.9rem;display:block}
+input[type=range]{width:100%;accent-color:var(--acc)}
+select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.btn{background:var(--acc);color:var(--accI);border:0;border-radius:8px;padding:9px 16px;font:500 .95rem Lexend,system-ui,sans-serif;cursor:pointer}
+.btn.alt{background:var(--soft);color:var(--ink)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:10px}
+.res div{background:var(--soft);border-radius:8px;padding:8px 12px;font-size:.88rem}
+.res b{display:block;font-size:1.15rem}
+svg{width:100%;max-width:340px;display:block;margin:0 auto}
+svg text{fill:var(--ink);font:500 13px Lexend,system-ui,sans-serif}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.cols{gap:6px}}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0;font:inherit;cursor:pointer}
+.opt.sel{border-color:var(--acc);background:var(--soft)}
+.opt.ok{border-color:var(--ok);background:var(--okB)}
+.opt.bad{border-color:var(--bad);background:var(--badB)}
+.opt:disabled{cursor:default}
+.fb{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:.92rem}
+.fb.ok{background:var(--okB);color:var(--ok)}.fb.bad{background:var(--badB);color:var(--bad)}
+.score{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:6px 0 10px;display:flex;justify-content:space-between;align-items:center;z-index:5;font-weight:500}
+.q{font-weight:500;margin-bottom:6px}
+@media(prefers-reduced-motion:no-preference){.opt{transition:background .15s,border-color .15s}}
+body{background-image:radial-gradient(var(--line) 1px,transparent 1px);background-size:22px 22px}
+body::before{background:#0B1437}
+header{position:relative;overflow:hidden;background:radial-gradient(circle at 85% 0,#22D3EE55,transparent 45%),linear-gradient(135deg,#0B1437 0%,#2A1B7A 55%,#6B3FE0 100%);border:0;padding:30px 16px 0;color:#fff}
+header .wrap{position:relative;z-index:1}
+h1,h2{font-family:Sora,Lexend,system-ui,sans-serif}
+h1{font-size:clamp(1.7rem,6.5vw,2.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:10px 0 8px}
+.sub{color:#C9D2FF;max-width:520px;margin-bottom:18px}
+.deco{pointer-events:none;position:absolute;right:-50px;top:-50px;width:240px;max-width:none;opacity:.5;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chip{display:inline-block;background:#FFFFFF22;border:1px solid #FFFFFF44;border-radius:99px;padding:3px 14px;font-weight:500;font-size:.9rem;backdrop-filter:blur(6px)}
+nav{gap:6px;padding-bottom:14px}
+nav button{border:0;border-radius:99px;color:#E3E8FF;background:#FFFFFF14;padding:8px 14px}
+nav button[aria-selected=true]{background:#fff;color:#2A1B7A;font-weight:700;box-shadow:0 4px 14px #0006}
+.card{border:0;border-radius:20px;box-shadow:0 10px 32px #2a1b7a1f;position:relative;overflow:hidden;padding:20px 20px 20px 24px}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(#7C5CFF,#22D3EE)}
+.card:nth-of-type(3n+2)::before{background:linear-gradient(#FFB547,#FF5C8A)}
+.card:nth-of-type(3n)::before{background:linear-gradient(#22D3EE,#19C79A)}
+.f{background:linear-gradient(135deg,#2A1B7A,#6B3FE0);color:#fff;text-align:center;font-size:1.05rem;padding:14px;border-radius:14px;box-shadow:0 6px 18px #6b3fe055}
+.ex{background:#FFB54722;border-left:4px solid #FFB547;border-radius:0 12px 12px 0;padding:10px 14px}
+.btn{background:linear-gradient(135deg,#7C5CFF,#22A9E8);color:#fff;border-radius:99px;padding:10px 20px;box-shadow:0 6px 16px #7c5cff55}
+.btn.alt{background:var(--soft);color:var(--ink);box-shadow:none}
+.btn:not(:disabled):hover{transform:translateY(-2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.opt{border-radius:14px;border-width:2px;padding:12px 14px}
+.opt:not(:disabled):hover{border-color:var(--acc);transform:translateY(-1px)}
+.opt.ok::after{content:" ✓";font-weight:700}
+.opt.bad::after{content:" ✕";font-weight:700}
+.score{background:var(--card);border-radius:99px;padding:8px 18px;box-shadow:0 6px 20px #2a1b7a26;margin-bottom:12px;top:calc(env(safe-area-inset-top,0px) + 8px)}
+.res div{border-top:4px solid #7C5CFF;border-radius:10px}
+.res div:nth-child(2){border-color:#22D3EE}.res div:nth-child(3){border-color:#FF5C8A}.res div:nth-child(4){border-color:#FFB547}
+#viz,#materi svg{background:#0B1437;border-radius:18px;padding:8px;box-shadow:0 10px 28px #0b143755}
+#viz text,#materi svg text{fill:#fff}
+#viz [stroke="var(--ink)"],#materi svg [stroke="var(--ink)"]{stroke:#fff}
+#viz [stroke="var(--acc)"],#materi svg [stroke="var(--acc)"]{stroke:#22D3EE}
+#viz circle[fill="var(--ink)"],#materi circle[fill="var(--ink)"]{fill:#fff}
+#viz [stroke="var(--bad)"]{stroke:#FF5C8A}
+.cf{position:fixed;top:-30px;z-index:50;pointer-events:none;font-size:24px;animation:fall 2.2s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--x),105vh) rotate(540deg)}}
+@media(prefers-reduced-motion:reduce){.cf{display:none}.deco{animation:none}.btn,.opt{transition:none}}
+@media(prefers-reduced-motion:no-preference){.btn,.opt{transition:transform .15s,background .15s,border-color .15s}}
+math{font-family:"STIX Two Math","Cambria Math","Latin Modern Math",math,serif;font-size:1.18em}
+.f math{font-size:1.4em}
+.m{display:block;margin:8px 0;font-size:1.05em}
+#eq{text-align:center;margin-top:14px}
+#eq math{display:block;margin:6px 0}
+.tag{display:inline-block;font-size:.75rem;font-weight:500;padding:1px 10px;border-radius:99px;background:var(--soft);color:var(--acc);margin:0 6px 4px 0}
+.card .row{margin-top:6px}
+.dock{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.dock .bt{width:50px;height:50px;border-radius:50%;border:0;font-size:1.35rem;cursor:pointer;background:linear-gradient(135deg,#7C5CFF,#22A9E8);color:#fff;box-shadow:0 8px 20px #2a1b7a66}
+.dock .bt.sm{width:38px;height:38px;font-size:1rem;background:var(--card);color:var(--ink);box-shadow:0 6px 16px #0003}
+.dock .bt.on{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px #7C5CFF33}}
+.mpanel{background:var(--card);border-radius:16px;padding:12px 14px;box-shadow:0 10px 28px #0004;width:230px;display:none}
+.mpanel.open{display:block}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#13233F;color:#fff;padding:10px 18px;border-radius:99px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.bar{height:14px;background:var(--soft);border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#19C79A,#22D3EE);border-radius:99px;transition:width .5s}
+.gh{display:flex;gap:14px;align-items:center}
+.bub{background:var(--soft);border-radius:16px;padding:10px 14px;font-size:.95rem;flex:1}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.stats span{background:var(--soft);border-radius:99px;padding:3px 12px;font-size:.85rem;font-weight:500}
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.bdg{background:var(--soft);border-radius:12px;padding:8px 10px;font-size:.82rem;opacity:.5;border:2px solid transparent}
+.bdg.on{opacity:1;border-color:#FFB547}
+.pop{animation:pop .8s ease-out;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.bob{animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;margin-top:10px}
+.gal figure{margin:0;background:var(--soft);border-radius:16px;padding:12px 8px 10px;text-align:center}
+.gal figcaption{font-size:.8rem;line-height:1.35;margin-top:6px}
+#materi svg.il{background:none;box-shadow:none;padding:0;max-width:100px}
+@media(prefers-reduced-motion:reduce){.dock .bt.on,.bob,.pop{animation:none}.toast,.bar i{transition:none}}
+.wrap{max-width:900px}
+@media(min-width:900px){nav{flex-wrap:wrap;overflow:visible}}
+h1{font-size:clamp(1.3rem,4.5vw,1.9rem)}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:center;background:linear-gradient(135deg,#0B1437,#2A1B7A 60%,#6B3FE0);color:#fff;padding:28px 28px 28px 32px}
+.hero::before{display:none}
+.hero-h{font:800 clamp(2rem,7vw,3.1rem)/1.05 Sora,Lexend,sans-serif;margin:8px 0 10px;letter-spacing:-.02em;color:#fff}
+.hero p{color:#D6DCFF}
+.eyebrow{display:inline-block;background:#FFFFFF1f;border:1px solid #FFFFFF44;border-radius:99px;padding:2px 12px;font-size:.8rem}
+.hero-art{max-width:250px}
+.spin{transform-origin:100px 100px;animation:spin 14s linear infinite}
+@media(max-width:620px){.hero{grid-template-columns:1fr;padding:22px}.hero-art{max-width:170px;order:-1}}
+.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;counter-reset:s}
+.steps li{background:var(--soft);border-radius:16px;padding:14px 12px 12px;counter-increment:s;position:relative;font-size:.88rem}
+.steps li::before{content:counter(s);position:absolute;top:-9px;left:-6px;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7C5CFF,#22A9E8);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.goals{margin:8px 0 0;padding:0;list-style:none}
+.goals li{padding:6px 0 6px 30px;position:relative}
+.goals li::before{content:"\1F3AF";position:absolute;left:0}
+.seg{display:flex;gap:4px;background:var(--soft);border-radius:99px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;border-radius:99px;padding:8px 6px;font:500 .85rem Lexend,system-ui,sans-serif;color:var(--mute);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--acc);box-shadow:0 2px 8px #0002;font-weight:700}
+.sim{background:#0B1437;border-radius:18px;padding:8px;box-shadow:0 10px 28px #0b143755}
+svg.sim text{fill:#fff}
+.tb{display:flex;align-items:center;gap:8px;font-size:.88rem;margin:6px 0}
+.tb .l{width:96px;flex:none}
+.tb .bar{flex:1;margin:0}
+.cert{max-width:100%;width:100%;border-radius:12px;box-shadow:0 10px 28px #0003;margin:10px 0}
+.reveal{animation:rv .5s ease-out both}
+@keyframes rv{from{opacity:0;transform:translateY(10px)}}
+@media(prefers-reduced-motion:reduce){.spin,.reveal{animation:none}}
+#ceq math,#geq math,#rle math,#eq math{font-size:1.05em}
+.f{overflow-x:auto}
+.ex,.fb{overflow-x:auto}
+.cheer{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:8px;background:var(--card);color:var(--ink);border-radius:18px;padding:6px 14px 6px 8px;box-shadow:0 10px 28px #0004;max-width:min(300px,calc(100vw - 90px));transform:translateY(140%);opacity:0;transition:transform .3s,opacity .3s;font-size:.88rem;font-weight:500;pointer-events:none}
+.cheer.show{transform:none;opacity:1}
+.cheer svg{flex:none;margin:0;width:46px;height:50px;max-width:none}
+svg.lab{touch-action:none;cursor:grab;padding:0;max-width:560px;display:block;margin:0 auto}
+.ltab{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:10px}
+.ltab th,.ltab td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+.ltab th{color:var(--mute);font-weight:500}
+.lsteps{padding-left:20px;margin:6px 0}
+.lctl label{margin-top:8px}
+#lseg{flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){.cheer{transition:none}}
+.cptab th,.cptab td{text-align:left;white-space:normal;vertical-align:top}
+.foot{text-align:center;color:var(--mute);font-size:.82rem;margin:24px 0 70px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<svg class="deco" viewBox="0 0 200 200" aria-hidden="true"><path d="M20 180H190M20 180V15" stroke="#fff" stroke-opacity=".4" stroke-width="3" fill="none"/><path d="M30 150L180 40" stroke="#22D3EE" stroke-width="4"/><g fill="#FFB547"><circle cx="45" cy="140" r="7"/><circle cx="80" cy="118" r="7"/><circle cx="110" cy="98" r="7"/><circle cx="150" cy="70" r="7"/></g><circle cx="163.6" cy="52" r="7" fill="#FF5C8A"/></svg><button type="button" class="chip" id="chip" style="font:500 .9rem Lexend,system-ui,sans-serif;color:#fff;cursor:pointer" aria-label="Buka kebun">🌱 0/70</button><h1>Statistik Bivariat: Asosiasi, Korelasi, dan Regresi</h1>
+<p class="sub">Media pembelajaran interaktif Matematika: materi, simulasi, latihan, ujian akhir, dan kebun tanaman.</p>
+<nav role="tablist" id="tabs"></nav>
+</div></header>
+<main><div class="wrap">
+
+<section id="beranda">
+<div class="card hero"><div><span class="eyebrow">Matematika · Fase F · SMAN 4 Medan</span><h2 class="hero-h">Jelajahi Data Bivariat!</h2><p>Temukan hubungan dua variabel lewat tabel dua arah, diagram pencar, korelasi, dan garis regresi, lalu gunakan untuk memprediksi. Jawab soal dengan benar untuk menumbuhkan kebunmu.</p><div class="row"><button class="btn" data-go="materi" type="button">🚀 Mulai belajar</button><button class="btn alt" data-go="kebun" type="button">🌱 Lihat kebunku</button></div></div><svg class="hero-art" viewBox="0 0 200 200" aria-hidden="true"><path d="M30 170H180M30 170V25" stroke="#fff" stroke-opacity=".5" stroke-width="2" fill="none"/><path d="M38 150L172 52" stroke="#22D3EE" stroke-width="3.5"/><g fill="#FFB547"><circle cx="50" cy="142" r="6"/><circle cx="72" cy="128" r="6"/><circle cx="88" cy="132" r="6"/><circle cx="108" cy="104" r="6"/><circle cx="126" cy="96" r="6"/><circle cx="140" cy="84" r="6"/><circle cx="160" cy="60" r="6"/></g><circle cx="108" cy="104" r="9" fill="none" stroke="#FF5C8A" stroke-width="2"/></svg></div>
+<div class="card"><label for="nm">Siapa namamu?</label><div class="row"><input type="text" id="nm" maxlength="30" placeholder="Nama lengkap" autocomplete="name"><button class="btn" id="nmok" type="button">Simpan</button></div><p id="hi" class="mute"></p></div>
+<div class="card"><h2>🤔 Pemantik</h2><p>Makin lama belajar, makin tinggi nilai? Geser jam belajar dan lihat nilai yang diperkirakan oleh garis yang paling cocok dengan data 12 siswa.</p>
+<svg viewBox="0 0 320 250" class="sim" id="pms" role="img" aria-label="Diagram pencar jam belajar dan nilai"></svg>
+<label for="pmx">Jam belajar per minggu: <span id="pmxv"></span></label><input type="range" id="pmx" min="0" max="10" step="0.5" value="4">
+<div class="res" id="pmo"></div>
+<p class="mute">Garis ini disebut garis regresi. Kamu akan menemukan cara menghitungnya.</p></div>
+<div class="card"><h2>Capaian pembelajaran</h2>
+<div class="stats"><span>Matematika</span><span>Fase F</span><span>Elemen: Analisis Data dan Peluang</span><span>Materi: Statistika bivariat</span></div>
+<p><b>Cuplikan Capaian Pembelajaran (CP) Fase F, elemen Analisis Data dan Peluang:</b> peserta didik melakukan proses penyelidikan statistika untuk mengidentifikasi dan menjelaskan asosiasi antara dua variabel kategorikal dan antara dua variabel numerikal (kuantitatif), memperkirakan model linear terbaik (<i>best fit</i> linear) pada data numerikal, serta membedakan sebab-akibat.</p>
+<p class="mute">Kalimat di atas adalah cuplikan dari rumusan CP. Cocokkan dengan dokumen CP resmi yang dipakai sekolah.</p>
+<div style="overflow-x:auto"><table class="ltab cptab"><tr><th>Indikator</th><th>Dipelajari lewat</th><th>Diukur lewat</th></tr>
+<tr><td>Mengidentifikasi data bivariat dan jenis variabel</td><td>Materi 1</td><td>Bank soal (Variabel)</td></tr>
+<tr><td>Menjelaskan asosiasi dua variabel kategorik</td><td>Materi 2, Lab 5</td><td>Bank soal (Asosiasi kategorik)</td></tr>
+<tr><td>Menjelaskan asosiasi dua variabel numerik dengan diagram pencar</td><td>Materi 3, Eksplorasi, Lab 1</td><td>Bank soal (Diagram pencar)</td></tr>
+<tr><td>Menafsirkan koefisien korelasi</td><td>Materi 4, Lab 1, Lab 3</td><td>Bank soal (Korelasi)</td></tr>
+<tr><td>Memperkirakan model linear terbaik (best fit)</td><td>Materi 5, Lab 2</td><td>Bank soal (Regresi)</td></tr>
+<tr><td>Memprediksi dengan model, membedakan interpolasi dan ekstrapolasi</td><td>Materi 6, Lab 4</td><td>Bank soal (Prediksi)</td></tr>
+<tr><td>Membedakan asosiasi dari sebab-akibat</td><td>Materi 7</td><td>Bank soal (Sebab-akibat), Ujian akhir</td></tr></table></div></div>
+<div class="card"><h2>Tujuan pembelajaran</h2><p>Setelah belajar, kamu dapat:</p><ul class="goals"><li>Menentukan jenis variabel dan menyusun tabel dua arah untuk dua variabel kategorik.</li><li>Menafsirkan asosiasi dari persentase dalam tabel dua arah.</li><li>Membuat dan menafsirkan diagram pencar dua variabel numerik.</li><li>Menghitung dan menafsirkan koefisien korelasi r.</li><li>Menentukan persamaan garis regresi linear ŷ = a + bx.</li><li>Memprediksi nilai y, serta menilai interpolasi dan ekstrapolasi.</li><li>Membedakan asosiasi dari hubungan sebab-akibat.</li></ul></div>
+<div class="card"><h2>Alur belajar</h2><ol class="steps"><li><b>Pahami</b><br>Baca materi dan lihat grafiknya.</li><li><b>Eksplorasi</b><br>Ubah data dan lakukan percobaan di Lab maya.</li><li><b>Latihan</b><br>Menjodohkan, isian, dan pilihan ganda.</li><li><b>Uji</b><br>Bank soal dan ujian akhir.</li><li><b>Panen</b><br>Kebun mekar, dapatkan sertifikat.</li></ol></div>
+<div class="card"><h2>Petunjuk singkat</h2><p>🎵 Tombol di kanan bawah memutar musik dan mengatur volume. 🌓 mengganti tema terang atau gelap. 💧 Setiap jawaban benar yang baru menyiram kebunmu. 🧪 Lab maya melatihmu menemukan konsep lewat percobaan. 🏆 Nilai ujian akhir 70 ke atas membuka sertifikat.</p></div>
+<div class="card" id="dev" hidden></div>
+</section>
+<section id="materi" hidden>
+<div class="card"><h2>Statistik bivariat di sekitar kita</h2><p>Statistik bivariat menyelidiki <b>dua variabel</b> sekaligus: apakah keduanya berhubungan, bagaimana pola hubungannya, dan bisakah yang satu dipakai untuk memperkirakan yang lain.</p><div class="gal"><figure><div style="font-size:2.2rem;line-height:1.1">📚</div><figcaption><b>Belajar dan nilai</b><br>dua variabel numerik</figcaption></figure><figure><div style="font-size:2.2rem;line-height:1.1">🌡️</div><figcaption><b>Suhu dan es krim</b><br>asosiasi positif</figcaption></figure><figure><div style="font-size:2.2rem;line-height:1.1">🚗</div><figcaption><b>Usia mobil dan harga</b><br>asosiasi negatif</figcaption></figure><figure><div style="font-size:2.2rem;line-height:1.1">🍳</div><figcaption><b>Sarapan dan fokus</b><br>dua variabel kategorik</figcaption></figure><figure><div style="font-size:2.2rem;line-height:1.1">📱</div><figcaption><b>Layar dan tidur</b><br>asosiasi, bukan tentu sebab</figcaption></figure><figure><div style="font-size:2.2rem;line-height:1.1">⚽</div><figcaption><b>Latihan dan skor</b><br>prediksi dengan garis</figcaption></figure></div></div>
+
+<div class="card"><h2>1. Data bivariat dan jenis variabel</h2>
+<p><b>Data bivariat</b> adalah data dua variabel yang diamati pada setiap subjek, misalnya jam belajar dan nilai ulangan tiap siswa. Ada dua jenis variabel:</p>
+<ul class="goals"><li><b>Kategorik</b>: berupa kelompok atau label, misalnya jenis kelamin, golongan darah, sarapan (ya atau tidak).</li><li><b>Numerik</b>: berupa bilangan hasil pengukuran atau pencacahan, misalnya tinggi badan, suhu, nilai.</li></ul>
+<p>Dalam hubungan sebab-akibat yang dicurigai, <b>variabel bebas (x)</b> adalah yang menjelaskan atau memengaruhi, sedangkan <b>variabel terikat (y)</b> adalah yang dijelaskan atau dipengaruhi.</p>
+<div class="ex"><b>Contoh.</b> Penelitian pengaruh jam belajar terhadap nilai ulangan: x = jam belajar (numerik), y = nilai ulangan (numerik).</div>
+<p class="mute">Dua variabel kategorik dianalisis dengan tabel dua arah dan persentase. Dua variabel numerik dianalisis dengan diagram pencar, korelasi, dan garis regresi.</p></div>
+
+<div class="card"><h2>2. Asosiasi dua variabel kategorik</h2>
+<p>Data dua variabel kategorik diringkas dalam <b>tabel dua arah</b>. Karena ukuran kelompok bisa berbeda, bandingkan <b>persentase dalam tiap kelompok</b>, bukan jumlah mentahnya.</p>
+<div style="overflow-x:auto"><table class="ltab"><tr><th></th><th>Konsentrasi baik</th><th>Konsentrasi kurang</th><th>Jumlah</th><th>% baik</th></tr>
+<tr><td>Sarapan</td><td>45</td><td>15</td><td>60</td><td><b>75%</b></td></tr>
+<tr><td>Tidak sarapan</td><td>16</td><td>24</td><td>40</td><td><b>40%</b></td></tr>
+<tr><th>Jumlah</th><th>61</th><th>39</th><th>100</th><th>61%</th></tr></table></div>
+<p>Konsentrasi baik: 45/60 = 75% pada yang sarapan, tetapi 16/40 = 40% pada yang tidak sarapan. Selisihnya 35 poin persentase, jadi ada <b>asosiasi</b> antara sarapan dan konsentrasi.</p>
+<div class="f"><math display="block"><mtext>Persentase </mtext><mo>=</mo><mfrac><mi>k</mi><mi>n</mi></mfrac><mo>×</mo><mn>100%</mn></math></div><p class="mute">k = banyak subjek yang memenuhi kategori, n = jumlah subjek dalam kelompok itu.</p>
+<p>Jika persentasenya hampir sama di semua kelompok, kedua variabel <b>hampir tidak berasosiasi</b>. Makin besar selisihnya, makin kuat asosiasinya. Coba di Lab 5.</p></div>
+
+<div class="card"><h2>3. Diagram pencar dan pola asosiasi</h2>
+<p>Pada <b>diagram pencar</b>, tiap subjek digambar sebagai satu titik (x, y). Perhatikan empat hal: <b>arah</b> (naik atau turun), <b>bentuk</b> (lurus atau melengkung), <b>kekuatan</b> (rapat atau menyebar), dan <b>pencilan</b> (titik yang jauh dari pola).</p>
+<div class="gal" style="grid-template-columns:repeat(3,1fr)"><figure><svg viewBox="0 0 120 100" role="img" aria-label="Titik naik" style="max-width:none"><path d="M8 92H112M8 92V8" stroke="#fff" stroke-opacity=".5"/><circle cx="16.5" cy="74.6" r="3.2" fill="#FFB547"/><circle cx="23.6" cy="69.3" r="3.2" fill="#FFB547"/><circle cx="31.2" cy="70.7" r="3.2" fill="#FFB547"/><circle cx="35.5" cy="58.8" r="3.2" fill="#FFB547"/><circle cx="43.0" cy="61.0" r="3.2" fill="#FFB547"/><circle cx="52.4" cy="52.2" r="3.2" fill="#FFB547"/><circle cx="58.4" cy="48.2" r="3.2" fill="#FFB547"/><circle cx="64.3" cy="48.3" r="3.2" fill="#FFB547"/><circle cx="70.9" cy="35.6" r="3.2" fill="#FFB547"/><circle cx="77.1" cy="33.1" r="3.2" fill="#FFB547"/><circle cx="84.3" cy="36.4" r="3.2" fill="#FFB547"/><circle cx="91.2" cy="25.7" r="3.2" fill="#FFB547"/><circle cx="96.1" cy="29.1" r="3.2" fill="#FFB547"/><circle cx="104.9" cy="18.3" r="3.2" fill="#FFB547"/></svg><figcaption><b>Positif</b><br>r ≈ 0,98</figcaption></figure><figure><svg viewBox="0 0 120 100" role="img" aria-label="Titik turun" style="max-width:none"><path d="M8 92H112M8 92V8" stroke="#fff" stroke-opacity=".5"/><circle cx="18.3" cy="17.8" r="3.2" fill="#FFB547"/><circle cx="24.9" cy="21.6" r="3.2" fill="#FFB547"/><circle cx="30.3" cy="26.5" r="3.2" fill="#FFB547"/><circle cx="37.1" cy="29.3" r="3.2" fill="#FFB547"/><circle cx="45.4" cy="44.5" r="3.2" fill="#FFB547"/><circle cx="49.2" cy="45.6" r="3.2" fill="#FFB547"/><circle cx="58.9" cy="49.3" r="3.2" fill="#FFB547"/><circle cx="64.3" cy="54.3" r="3.2" fill="#FFB547"/><circle cx="70.4" cy="57.3" r="3.2" fill="#FFB547"/><circle cx="76.5" cy="58.9" r="3.2" fill="#FFB547"/><circle cx="84.0" cy="60.0" r="3.2" fill="#FFB547"/><circle cx="90.9" cy="64.2" r="3.2" fill="#FFB547"/><circle cx="98.2" cy="68.2" r="3.2" fill="#FFB547"/><circle cx="104.1" cy="81.7" r="3.2" fill="#FFB547"/></svg><figcaption><b>Negatif</b><br>r ≈ -0,98</figcaption></figure><figure><svg viewBox="0 0 120 100" role="img" aria-label="Titik acak" style="max-width:none"><path d="M8 92H112M8 92V8" stroke="#fff" stroke-opacity=".5"/><circle cx="18.9" cy="45.5" r="3.2" fill="#FFB547"/><circle cx="25.7" cy="56.6" r="3.2" fill="#FFB547"/><circle cx="32.4" cy="26.2" r="3.2" fill="#FFB547"/><circle cx="37.2" cy="57.2" r="3.2" fill="#FFB547"/><circle cx="45.8" cy="63.8" r="3.2" fill="#FFB547"/><circle cx="52.2" cy="75.1" r="3.2" fill="#FFB547"/><circle cx="58.0" cy="50.8" r="3.2" fill="#FFB547"/><circle cx="64.3" cy="37.9" r="3.2" fill="#FFB547"/><circle cx="69.6" cy="60.8" r="3.2" fill="#FFB547"/><circle cx="77.9" cy="64.1" r="3.2" fill="#FFB547"/><circle cx="82.1" cy="57.0" r="3.2" fill="#FFB547"/><circle cx="88.7" cy="36.9" r="3.2" fill="#FFB547"/><circle cx="97.6" cy="24.4" r="3.2" fill="#FFB547"/><circle cx="104.9" cy="71.3" r="3.2" fill="#FFB547"/></svg><figcaption><b>Tidak ada</b><br>r ≈ -0,02</figcaption></figure></div>
+<div class="gal" style="grid-template-columns:repeat(2,1fr)"><figure><svg viewBox="0 0 120 100" role="img" aria-label="Pola melengkung" style="max-width:none"><path d="M8 92H112M8 92V8" stroke="#fff" stroke-opacity=".5"/><circle cx="12.7" cy="25.3" r="3.2" fill="#FFB547"/><circle cx="19.8" cy="42.5" r="3.2" fill="#FFB547"/><circle cx="26.9" cy="57.0" r="3.2" fill="#FFB547"/><circle cx="34.0" cy="68.4" r="3.2" fill="#FFB547"/><circle cx="41.1" cy="77.9" r="3.2" fill="#FFB547"/><circle cx="48.2" cy="79.6" r="3.2" fill="#FFB547"/><circle cx="55.3" cy="85.0" r="3.2" fill="#FFB547"/><circle cx="62.4" cy="82.2" r="3.2" fill="#FFB547"/><circle cx="69.5" cy="74.4" r="3.2" fill="#FFB547"/><circle cx="76.5" cy="66.7" r="3.2" fill="#FFB547"/><circle cx="83.6" cy="58.5" r="3.2" fill="#FFB547"/><circle cx="90.7" cy="44.0" r="3.2" fill="#FFB547"/><circle cx="97.8" cy="22.0" r="3.2" fill="#FFB547"/><circle cx="104.9" cy="5.9" r="3.2" fill="#FFB547"/></svg><figcaption><b>Tidak linear</b><br>pola melengkung, garis lurus kurang cocok</figcaption></figure><figure><svg viewBox="0 0 120 100" role="img" aria-label="Satu pencilan" style="max-width:none"><path d="M8 92H112M8 92V8" stroke="#fff" stroke-opacity=".5"/><circle cx="17.5" cy="76.2" r="3.2" fill="#FFB547"/><circle cx="25.0" cy="67.8" r="3.2" fill="#FFB547"/><circle cx="32.6" cy="62.7" r="3.2" fill="#FFB547"/><circle cx="40.1" cy="60.8" r="3.2" fill="#FFB547"/><circle cx="47.7" cy="56.7" r="3.2" fill="#FFB547"/><circle cx="55.3" cy="50.4" r="3.2" fill="#FFB547"/><circle cx="62.8" cy="40.6" r="3.2" fill="#FFB547"/><circle cx="70.4" cy="38.1" r="3.2" fill="#FFB547"/><circle cx="78.0" cy="28.8" r="3.2" fill="#FFB547"/><circle cx="104.4" cy="83.6" r="3.2" fill="#FFB547"/></svg><figcaption><b>Ada pencilan</b><br>satu titik jauh dari pola</figcaption></figure></div>
+<ul class="goals"><li><b>Positif</b>: x naik, y cenderung naik.</li><li><b>Negatif</b>: x naik, y cenderung turun.</li><li><b>Tidak ada</b>: titik menyebar tanpa pola.</li></ul></div>
+
+<div class="card"><h2>4. Koefisien korelasi r</h2>
+<p>Koefisien korelasi <b>r</b> mengukur arah dan kekuatan hubungan <b>linear</b> dua variabel numerik, dengan −1 ≤ r ≤ 1.</p>
+<div class="f"><math display="block"><mi>r</mi><mo>=</mo><mfrac><msub><mi>S</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><msqrt><msub><mi>S</mi><mrow><mi>x</mi><mi>x</mi></mrow></msub><mo>×</mo><msub><mi>S</mi><mrow><mi>y</mi><mi>y</mi></mrow></msub></msqrt></mfrac></math></div>
+<div class="f"><math display="block"><msub><mi>S</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><mo>∑</mo><mo>(</mo><mi>x</mi><mo>−</mo><mover><mi>x</mi><mo>¯</mo></mover><mo>)</mo><mo>(</mo><mi>y</mi><mo>−</mo><mover><mi>y</mi><mo>¯</mo></mover><mo>)</mo><mspace width="1.2em"/><msub><mi>S</mi><mrow><mi>x</mi><mi>x</mi></mrow></msub><mo>=</mo><mo>∑</mo><msup><mrow><mo>(</mo><mi>x</mi><mo>−</mo><mover><mi>x</mi><mo>¯</mo></mover><mo>)</mo></mrow><mn>2</mn></msup><mspace width="1.2em"/><msub><mi>S</mi><mrow><mi>y</mi><mi>y</mi></mrow></msub><mo>=</mo><mo>∑</mo><msup><mrow><mo>(</mo><mi>y</mi><mo>−</mo><mover><mi>y</mi><mo>¯</mo></mover><mo>)</mo></mrow><mn>2</mn></msup></math></div>
+<div style="overflow-x:auto"><table class="ltab"><tr><th>Nilai |r|</th><th>Kekuatan asosiasi linear</th></tr>
+<tr><td>0,7 sampai 1</td><td>Kuat</td></tr><tr><td>0,4 sampai kurang dari 0,7</td><td>Sedang</td></tr><tr><td>0,1 sampai kurang dari 0,4</td><td>Lemah</td></tr><tr><td>kurang dari 0,1</td><td>Hampir tidak ada</td></tr></table></div>
+<p class="mute">Tanda r menunjukkan arah: positif jika naik bersama, negatif jika yang satu naik dan yang lain turun. Batas di atas hanyalah pedoman kasar.</p>
+<p><b>Contoh.</b> Data jam belajar (x) dan nilai (y) lima siswa. Rata-rata x̄ = 4 dan ȳ = 66.</p>
+<div style="overflow-x:auto"><table class="ltab"><tr><th>x</th><th>y</th><th>x − x̄</th><th>y − ȳ</th><th>(x − x̄)(y − ȳ)</th><th>(x − x̄)²</th><th>(y − ȳ)²</th></tr><tr><td>2</td><td>50</td><td>-2</td><td>-16</td><td>32</td><td>4</td><td>256</td></tr><tr><td>3</td><td>60</td><td>-1</td><td>-6</td><td>6</td><td>1</td><td>36</td></tr><tr><td>4</td><td>65</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>1</td></tr><tr><td>5</td><td>75</td><td>1</td><td>9</td><td>9</td><td>1</td><td>81</td></tr><tr><td>6</td><td>80</td><td>2</td><td>14</td><td>28</td><td>4</td><td>196</td></tr><tr><th>20</th><th>330</th><th>0</th><th>0</th><th>75</th><th>10</th><th>570</th></tr></table></div>
+<div class="ex"><math><mi>r</mi><mo>=</mo><mfrac><mn>75</mn><msqrt><mn>10</mn><mo>×</mo><mn>570</mn></msqrt></mfrac><mo>=</mo><mfrac><mn>75</mn><msqrt><mn>5.700</mn></msqrt></mfrac><mo>≈</mo><mn>0,99</mn></math> Asosiasi positif dan sangat kuat.</div>
+<p class="mute">Ingat: r = 0 hanya berarti tidak ada hubungan <b>linear</b>. Hubungan melengkung bisa saja ada. Nilai r juga tidak berubah jika satuan diubah.</p></div>
+
+<div class="card"><h2>5. Garis regresi linear (best fit)</h2>
+<p>Garis yang paling cocok dengan titik-titik dipilih agar <b>jumlah kuadrat residu sekecil mungkin</b> (metode kuadrat terkecil). Residu adalah selisih nilai sebenarnya dengan nilai dugaan garis.</p>
+<div class="f"><math display="block"><mover><mi>y</mi><mo>^</mo></mover><mo>=</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>x</mi></math></div>
+<div class="f"><math display="block"><mi>b</mi><mo>=</mo><mfrac><msub><mi>S</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><msub><mi>S</mi><mrow><mi>x</mi><mi>x</mi></mrow></msub></mfrac><mspace width="2em"/><mi>a</mi><mo>=</mo><mover><mi>y</mi><mo>¯</mo></mover><mo>−</mo><mi>b</mi><mover><mi>x</mi><mo>¯</mo></mover></math></div>
+<p>Gradien <b>b</b> menyatakan perubahan rata-rata y untuk setiap kenaikan 1 satuan x. Konstanta <b>a</b> adalah dugaan y saat x = 0. Garis regresi selalu melalui titik (x̄, ȳ).</p>
+<svg viewBox="0 0 320 250" role="img" aria-label="Diagram pencar dengan garis regresi dan residu"><line x1="44.0" y1="12" x2="44.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="44.0" y="228" text-anchor="middle" style="font-size:10px">0</text><line x1="110.0" y1="12" x2="110.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="110.0" y="228" text-anchor="middle" style="font-size:10px">2</text><line x1="176.0" y1="12" x2="176.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="176.0" y="228" text-anchor="middle" style="font-size:10px">4</text><line x1="242.0" y1="12" x2="242.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="242.0" y="228" text-anchor="middle" style="font-size:10px">6</text><line x1="308.0" y1="12" x2="308.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="308.0" y="228" text-anchor="middle" style="font-size:10px">8</text><line x1="44" y1="214.0" x2="308" y2="214.0" stroke="#fff" stroke-opacity=".1"/><text x="39" y="217.0" text-anchor="end" style="font-size:10px">40</text><line x1="44" y1="146.7" x2="308" y2="146.7" stroke="#fff" stroke-opacity=".1"/><text x="39" y="149.7" text-anchor="end" style="font-size:10px">60</text><line x1="44" y1="79.3" x2="308" y2="79.3" stroke="#fff" stroke-opacity=".1"/><text x="39" y="82.3" text-anchor="end" style="font-size:10px">80</text><line x1="44" y1="12.0" x2="308" y2="12.0" stroke="#fff" stroke-opacity=".1"/><text x="39" y="15.0" text-anchor="end" style="font-size:10px">100</text><path d="M44 12V214H308" stroke="#fff" stroke-opacity=".6" fill="none"/><text x="176.0" y="245" text-anchor="middle" style="font-size:11px">Jam belajar (x)</text><text transform="translate(11 113.0) rotate(-90)" text-anchor="middle" style="font-size:11px">Nilai (y)</text><clipPath id="c1964"><rect x="44" y="12" width="264" height="202"/></clipPath><path d="M44.0 227.5L308.0 25.5" stroke="#22D3EE" stroke-width="2.5" clip-path="url(#c1964)"/><line x1="110.0" y1="180.3" x2="110.0" y2="177.0" stroke="#FF5C8A" stroke-width="2"/><line x1="143.0" y1="146.7" x2="143.0" y2="151.7" stroke="#FF5C8A" stroke-width="2"/><line x1="176.0" y1="129.8" x2="176.0" y2="126.5" stroke="#FF5C8A" stroke-width="2"/><line x1="209.0" y1="96.2" x2="209.0" y2="101.2" stroke="#FF5C8A" stroke-width="2"/><line x1="242.0" y1="79.3" x2="242.0" y2="76.0" stroke="#FF5C8A" stroke-width="2"/><circle cx="110.0" cy="180.3" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="143.0" cy="146.7" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="176.0" cy="129.8" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="209.0" cy="96.2" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="242.0" cy="79.3" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/></svg>
+<div class="ex"><b>Contoh (data di atas).</b> b = 75 / 10 = 7,5 dan a = 66 − 7,5 × 4 = 36. Persamaannya <b>ŷ = 36 + 7,5x</b>. Artinya tiap tambahan 1 jam belajar, nilai diperkirakan naik 7,5.</div></div>
+
+<div class="card"><h2>6. Prediksi, residu, dan koefisien determinasi</h2>
+<p>Dengan persamaan ŷ = 36 + 7,5x, nilai untuk x = 5,5 jam adalah ŷ = 36 + 7,5 × 5,5 = <b>77,25</b>.</p>
+<div class="f"><math display="block"><mi>e</mi><mo>=</mo><mi>y</mi><mo>−</mo><mover><mi>y</mi><mo>^</mo></mover></math></div><p class="mute">Residu e = y − ŷ. Koefisien determinasi r² (kuadrat dari r) menyatakan bagian variasi y yang dijelaskan oleh hubungan linearnya dengan x.</p>
+<div style="overflow-x:auto"><table class="ltab"><tr><th>x</th><th>y</th><th>ŷ</th><th>Residu (y − ŷ)</th><th>Residu²</th></tr><tr><td>2</td><td>50</td><td>51</td><td>-1</td><td>1</td></tr><tr><td>3</td><td>60</td><td>58,5</td><td>1,5</td><td>2,25</td></tr><tr><td>4</td><td>65</td><td>66</td><td>-1</td><td>1</td></tr><tr><td>5</td><td>75</td><td>73,5</td><td>1,5</td><td>2,25</td></tr><tr><td>6</td><td>80</td><td>81</td><td>-1</td><td>1</td></tr><tr><th colspan="3">Jumlah</th><th>0</th><th>7,5</th></tr></table></div>
+<p>Jumlah residu = 0 dan jumlah kuadrat residu = 7,5, yaitu nilai terkecil yang mungkin. Koefisien determinasi r² = 0,99² ≈ 0,987, jadi sekitar <b>98,7%</b> variasi nilai dijelaskan oleh jam belajar.</p>
+<p><b>Interpolasi</b> adalah prediksi di dalam rentang data x (di sini 2 sampai 6 jam), umumnya dapat dipercaya. <b>Ekstrapolasi</b> adalah prediksi di luar rentang itu dan berisiko.</p>
+<svg viewBox="0 0 320 250" role="img" aria-label="Interpolasi dan ekstrapolasi"><line x1="44.0" y1="12" x2="44.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="44.0" y="228" text-anchor="middle" style="font-size:10px">0</text><line x1="81.7" y1="12" x2="81.7" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="81.7" y="228" text-anchor="middle" style="font-size:10px">2</text><line x1="119.4" y1="12" x2="119.4" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="119.4" y="228" text-anchor="middle" style="font-size:10px">4</text><line x1="157.1" y1="12" x2="157.1" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="157.1" y="228" text-anchor="middle" style="font-size:10px">6</text><line x1="194.9" y1="12" x2="194.9" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="194.9" y="228" text-anchor="middle" style="font-size:10px">8</text><line x1="232.6" y1="12" x2="232.6" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="232.6" y="228" text-anchor="middle" style="font-size:10px">10</text><line x1="270.3" y1="12" x2="270.3" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="270.3" y="228" text-anchor="middle" style="font-size:10px">12</text><line x1="308.0" y1="12" x2="308.0" y2="214" stroke="#fff" stroke-opacity=".1"/><text x="308.0" y="228" text-anchor="middle" style="font-size:10px">14</text><line x1="44" y1="214.0" x2="308" y2="214.0" stroke="#fff" stroke-opacity=".1"/><text x="39" y="217.0" text-anchor="end" style="font-size:10px">0</text><line x1="44" y1="163.5" x2="308" y2="163.5" stroke="#fff" stroke-opacity=".1"/><text x="39" y="166.5" text-anchor="end" style="font-size:10px">40</text><line x1="44" y1="113.0" x2="308" y2="113.0" stroke="#fff" stroke-opacity=".1"/><text x="39" y="116.0" text-anchor="end" style="font-size:10px">80</text><line x1="44" y1="62.5" x2="308" y2="62.5" stroke="#fff" stroke-opacity=".1"/><text x="39" y="65.5" text-anchor="end" style="font-size:10px">120</text><line x1="44" y1="12.0" x2="308" y2="12.0" stroke="#fff" stroke-opacity=".1"/><text x="39" y="15.0" text-anchor="end" style="font-size:10px">160</text><path d="M44 12V214H308" stroke="#fff" stroke-opacity=".6" fill="none"/><text x="176.0" y="245" text-anchor="middle" style="font-size:11px">Jam belajar (x)</text><text transform="translate(11 113.0) rotate(-90)" text-anchor="middle" style="font-size:11px">Nilai (y)</text><clipPath id="c9898"><rect x="44" y="12" width="264" height="202"/></clipPath><path d="M44.0 168.6L308.0 36.0" stroke="#22D3EE" stroke-width="2" stroke-dasharray="6 4" clip-path="url(#c9898)"/><path d="M81.7 149.6L157.1 111.7" stroke="#22D3EE" stroke-width="2.5" clip-path="url(#c9898)"/><circle cx="81.7" cy="150.9" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="100.6" cy="138.2" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="119.4" cy="131.9" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="138.3" cy="119.3" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="157.1" cy="113.0" r="5" fill="#FFB547" stroke="#fff" stroke-width="1"/><circle cx="308.0" cy="36.0" r="6" fill="#FF5C8A" stroke="#fff" stroke-width="1.5"/><text x="302.0" y="26.0" text-anchor="end" style="font-size:11px;fill:#FF5C8A">x = 14</text></svg>
+<div class="ex"><b>Peringatan.</b> Untuk x = 14 jam, ŷ = 36 + 7,5 × 14 = 141, padahal nilai maksimum hanya 100. Pola linear tidak selalu berlanjut di luar data.</div></div>
+
+<div class="card"><h2>7. Asosiasi bukan berarti sebab-akibat</h2>
+<p>Dua variabel yang berasosiasi kuat belum tentu saling menyebabkan. Sering ada <b>variabel pengganggu</b> (confounding) yang memengaruhi keduanya.</p>
+<svg viewBox="0 0 320 170" role="img" aria-label="Cuaca panas memengaruhi penjualan es krim dan jumlah orang berenang"><rect x="110" y="8" width="100" height="36" rx="10" fill="#FFB54733" stroke="#FFB547" stroke-width="2"/><text x="160" y="31" text-anchor="middle">Cuaca panas</text>
+<rect x="10" y="110" width="110" height="36" rx="10" fill="#22D3EE22" stroke="#22D3EE" stroke-width="2"/><text x="65" y="133" text-anchor="middle" style="font-size:11px">Penjualan es krim</text>
+<rect x="200" y="110" width="110" height="36" rx="10" fill="#22D3EE22" stroke="#22D3EE" stroke-width="2"/><text x="255" y="133" text-anchor="middle" style="font-size:11px">Orang berenang</text>
+<path d="M140 46L80 106M180 46L240 106" stroke="#FFB547" stroke-width="2.5" fill="none"/><path d="M80 106l3-12 8 8zM240 106l-3-12-8 8z" fill="#FFB547"/>
+<path d="M124 128H196" stroke="#FF5C8A" stroke-width="2.5" stroke-dasharray="5 4"/><text x="160" y="122" text-anchor="middle" style="fill:#FF5C8A;font-size:11px">korelasi tinggi</text><text x="160" y="166" text-anchor="middle" style="fill:#FF5C8A;font-size:11px">bukan sebab-akibat</text></svg>
+<ul class="goals"><li>Penjualan es krim dan jumlah orang berenang sama-sama naik saat cuaca panas.</li><li>Arah sebab-akibat bisa terbalik, atau hanya kebetulan.</li><li>Bukti sebab-akibat yang kuat datang dari <b>eksperimen terkendali</b> dengan pengelompokan acak.</li></ul>
+<p class="mute">Pencilan juga perlu diperiksa: satu titik yang jauh dapat mengubah r dan garis regresi dengan besar. Buktikan di Lab 3.</p></div>
+
+<div class="card"><h2>Langkah menyelesaikan soal bivariat</h2>
+<p>1) Tentukan variabel bebas dan terikat serta jenisnya. 2) Kategorik: buat tabel dua arah dan bandingkan persentase. Numerik: gambar diagram pencar. 3) Hitung r dan tafsirkan arah serta kekuatannya. 4) Hitung b lalu a, tulis ŷ = a + bx. 5) Prediksi di dalam rentang data, waspadai ekstrapolasi. 6) Tarik kesimpulan, dan ingat asosiasi bukan sebab-akibat.</p></div>
+</section><section id="eksplor" hidden>
+<div class="card"><h2>Eksplorasi: pilih data</h2>
+<p class="mute">Pilih himpunan data. Perhatikan arah titik, nilai r, dan garis regresinya.</p>
+<label for="ps">Data</label><select id="ps"></select>
+<svg viewBox="0 0 320 250" class="sim" id="sv1" role="img" aria-label="Diagram pencar data terpilih"></svg>
+<div class="row" style="margin-top:8px"><label><input type="checkbox" id="sl" checked> Garis regresi</label><label><input type="checkbox" id="sres"> Residu</label></div>
+<div class="res" id="so"></div><div class="f" id="seq" style="white-space:normal"></div><p id="sint" class="mute"></p></div>
+<div class="card"><h2>Buat data sendiri</h2>
+<p class="mute">Ketuk area grafik untuk menambah titik (minimal 2). Lihat r dan garis regresi berubah.</p>
+<svg viewBox="0 0 320 250" class="sim lab" id="sv2" role="img" aria-label="Area untuk membuat titik data sendiri"></svg>
+<div class="row" style="margin-top:8px"><button class="btn alt" id="sundo" type="button">Hapus titik terakhir</button><button class="btn alt" id="srand" type="button">Acak 12 titik</button><button class="btn alt" id="sclr" type="button">Kosongkan</button></div>
+<div class="res" id="so2"></div><div class="f" id="seq2" style="white-space:normal"></div></div>
+</section>
+
+<section id="lab" hidden>
+<div class="seg" id="lseg"></div>
+<div id="labBody"></div>
+</section>
+
+<section id="jodoh" hidden>
+<div class="score"><span>Menjodohkan</span><span id="sj">0/5 cocok</span></div>
+<p class="mute">Pilih satu soal di kiri, lalu pilih jawabannya di kanan.</p>
+<div class="cols"><div id="jl"></div><div id="jr"></div></div>
+<div id="jf"></div>
+<p><button class="btn alt" id="jreset">Ulangi</button></p>
+</section>
+
+<section id="isian" hidden>
+<div class="score"><span>Isian singkat</span><span id="si">Skor 0/5</span></div>
+<div id="il"></div>
+<p><button class="btn alt" id="ireset">Ulangi</button></p>
+</section>
+
+<section id="pg" hidden>
+<div class="score"><span>Pilihan ganda</span><span id="sp">Skor 0/5</span></div>
+<div id="pl"></div>
+<p><button class="btn alt" id="preset">Ulangi</button></p></section><section id="bank" hidden>
+<div class="score"><span>Bank soal · <span id="bn"></span></span><span id="bs">Benar 0/0</span></div>
+<div class="card"><p class="mute">Soal dari 7 topik dan 3 tingkat. Pilih filter, lalu kerjakan. Pembahasan muncul setelah menjawab.</p><div class="row"><div><label for="ft">Topik</label><select id="ft"><option value="">Semua topik</option><option value="V">Variabel &amp; data bivariat</option><option value="A">Asosiasi variabel kategorik</option><option value="P">Diagram pencar &amp; pola</option><option value="R">Koefisien korelasi</option><option value="G">Garis regresi</option><option value="Y">Prediksi &amp; residu</option><option value="S">Sebab-akibat &amp; pencilan</option></select></div><div><label for="fl">Tingkat</label><select id="fl"><option value="">Semua tingkat</option><option value="1">Mudah</option><option value="2">Sedang</option><option value="3">Sulit</option></select></div><button class="btn" id="bgo">Acak soal</button></div></div>
+<div id="bl"></div>
+</section>
+
+<section id="akhir" hidden>
+<div class="card" id="exIntro"><h2>🏆 Ujian akhir</h2><p>10 soal acak dari 7 topik. Kerjakan tanpa petunjuk. Hasil, penguasaan tiap topik, dan pembahasan muncul di akhir. Nilai 70 ke atas membuka sertifikat.</p><div class="stats"><span>10 soal</span><span>Tanpa bocoran jawaban</span><span id="exBest">Nilai terbaik: -</span></div><div class="row"><button class="btn" id="exGo" type="button">Mulai ujian</button><button class="btn alt" id="exEg" type="button">👀 Lihat contoh sertifikat</button></div><div id="exEgBox"></div></div>
+<div id="exBody"></div>
+</section>
+<section id="kebun" hidden>
+<div class="card"><h2>Kebun Datamu</h2>
+<div class="gh"><svg viewBox="0 0 100 110" style="width:84px;flex:none" role="img" aria-label="Maskot Lingko"><path d="M50 26 C48 10 36 5 27 9 C29 20 40 27 50 26Z" fill="#46C98A"/><path d="M50 26 C52 10 64 5 73 9 C71 20 60 27 50 26Z" fill="#2FA36B"/><circle cx="50" cy="66" r="38" fill="#FFD166"/><circle cx="37" cy="60" r="5" fill="#13233F"/><circle cx="63" cy="60" r="5" fill="#13233F"/><circle cx="39" cy="58" r="1.8" fill="#fff"/><circle cx="65" cy="58" r="1.8" fill="#fff"/><path d="M38 76 Q50 88 62 76" stroke="#13233F" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="29" cy="72" r="5" fill="#FF8FB1" opacity=".6"/><circle cx="71" cy="72" r="5" fill="#FF8FB1" opacity=".6"/></svg><div class="bub" id="gmsg"></div></div>
+<div class="stats"><span id="gl"></span><span id="gw"></span><span>Mekar: <b id="gb"></b></span></div>
+<div class="bar" role="progressbar" aria-label="Progres tanaman berikutnya"><i id="gbar"></i></div>
+<p class="mute" id="gnext"></p></div>
+<div class="card"><svg id="garden" viewBox="0 0 360 340" style="max-width:520px" role="img" aria-label="Kebun berisi enam tanaman yang tumbuh sesuai jawaban benar"></svg>
+<p class="mute">Setiap jawaban benar yang baru (di menjodohkan, isian, pilihan ganda, atau bank soal) memberi 1 siraman 💧. Delapan siraman membuat satu tanaman mekar.</p></div>
+<div class="card"><h2>📜 Riwayat belajar</h2><p class="mute" id="rwnote"></p><div style="overflow-x:auto"><table class="ltab" id="rwtab"></table></div><p style="margin-top:10px"><button class="btn alt" id="rwdl" type="button">⬇️ Unduh riwayat (CSV)</button></p></div>
+<div class="card"><h2>Lencana</h2><div class="badges" id="gbd"></div>
+<p style="margin-top:12px"><button class="btn alt" id="greset" type="button">Mulai kebun baru</button></p>
+<p class="mute">Progres kebun tersimpan di perangkat dan browser ini.</p></div>
+</section>
+</div></main>
+<div class="dock"><div class="mpanel" id="mpanel"><label for="mv">Suasana musik</label><select id="mv"><option value="0">Lo-fi santai</option><option value="1">Semangat belajar</option><option value="2">Fokus tenang</option></select><label for="mvol" style="margin-top:8px">Volume</label><input type="range" id="mvol" min="0" max="100" value="50"><label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="msfx" checked> Efek suara</label><p class="mute" style="font-size:.78rem;margin:8px 0 0">Musik dibuat langsung oleh browser. Tekan 🎵 untuk memulai.</p></div><button class="bt sm" id="mtheme" type="button" aria-label="Ganti tema terang atau gelap">🌓</button><button class="bt sm" id="mset" type="button" aria-label="Pengaturan musik" aria-expanded="false">⚙️</button><button class="bt" id="mplay" type="button" aria-pressed="false" aria-label="Putar musik">🎵</button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="cheer" id="cheer" aria-live="polite"><svg viewBox="0 0 100 110" width="46" height="50" aria-hidden="true"><path d="M50 26 C48 10 36 5 27 9 C29 20 40 27 50 26Z" fill="#46C98A"/><path d="M50 26 C52 10 64 5 73 9 C71 20 60 27 50 26Z" fill="#2FA36B"/><circle cx="50" cy="66" r="38" fill="#FFD166"/><circle cx="37" cy="60" r="5" fill="#13233F"/><circle cx="63" cy="60" r="5" fill="#13233F"/><circle cx="39" cy="58" r="1.8" fill="#fff"/><circle cx="65" cy="58" r="1.8" fill="#fff"/><path id="cmo" d="M36 74 Q50 92 64 74" stroke="#13233F" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="29" cy="72" r="5" fill="#FF8FB1" opacity=".6"/><circle cx="71" cy="72" r="5" fill="#FF8FB1" opacity=".6"/></svg><span id="cheerT"></span></div>
+<script>
+const $=s=>document.querySelector(s);
+const MI=s=>s.split(' ').filter(Boolean).map(t=>{let e='',c=t.match(/[.,]$/);if(c&&t.length>1){t=t.slice(0,-1);e='<mtext>'+c[0]+'</mtext>'}let u=t.replace(/^\((.*)\)$/,'$1'),m;return(/^-?[\d,.]+[°%]?$/.test(u)?'<mn>'+u+'</mn>':(m=u.match(/^(\d+)\/(\d+)$/))?'<mfrac><mn>'+m[1]+'</mn><mn>'+m[2]+'</mn></mfrac>':(m=u.match(/^(\d+)²$/))?'<msup><mn>'+m[1]+'</mn><mn>2</mn></msup>':/^[×=≈+\-]$/.test(u)?'<mo>'+u+'</mo>':/^[a-zθπ]$/.test(u)?'<mi>'+u+'</mi>':/^[a-z]\u0304$/.test(u.normalize('NFD'))?'<mover><mi>'+u[0]+'</mi><mo>¯</mo></mover>':/^y\u0302$/.test(u.normalize('NFD'))?'<mover><mi>y</mi><mo>^</mo></mover>':/^[a-z]²$/.test(u)?'<msup><mi>'+u[0]+'</mi><mn>2</mn></msup>':u=='Σ'?'<mo>∑</mo>':/^[¼½⅓]$/.test(u)?'<mn>'+u+'</mn>':'<mtext>&nbsp;'+u+'&nbsp;</mtext>')+e}).join('');
+const M=s=>'<math>'+s.split(/(akar \([^)]*\)|akar \d+)/).filter(Boolean).map(g=>/^akar /.test(g)?'<msqrt>'+MI(g.slice(5).replace(/^\(|\)$/g,''))+'</msqrt>':MI(g)).join('')+'</math>';
+document.querySelectorAll('.m').forEach(e=>e.innerHTML=M(e.textContent));
+const fmt=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
+const SECS=['beranda','materi','eksplor','lab','jodoh','isian','pg','bank','akhir','kebun'];
+const T=[['beranda','🏠 Beranda'],['materi','📘 Materi'],['eksplor','🔭 Eksplorasi'],['lab','🧪 Lab maya'],['jodoh','✍️ Latihan'],['bank','📚 Bank soal'],['akhir','🏆 Ujian akhir'],['kebun','🌱 Kebun']];
+const LAT=['jodoh','isian','pg'],LATN={jodoh:'🔗 Menjodohkan',isian:'✏️ Isian',pg:'🎯 Pilihan ganda'};
+let lastLat='jodoh';
+const nav=$('#tabs');
+function go(sec){SECS.forEach(x=>{$('#'+x).hidden=x!=sec});const tid=LAT.includes(sec)?'jodoh':sec;T.forEach(([x],j)=>nav.children[j].setAttribute('aria-selected',x==tid));scrollTo(0,0)}
+T.forEach(([id,l],i)=>{const b=document.createElement('button');b.textContent=l;b.setAttribute('role','tab');b.setAttribute('aria-selected',i==0);b.onclick=()=>go(id=='jodoh'?lastLat:id);nav.appendChild(b)});
+LAT.forEach(id=>{const d=document.createElement('div');d.className='seg';LAT.forEach(x=>{const b=document.createElement('button');b.type='button';b.textContent=LATN[x];b.setAttribute('aria-pressed',x==id);b.onclick=()=>{lastLat=x;go(x)};d.appendChild(b)});$('#'+id).prepend(d)});
+document.addEventListener('click',ev=>{const t=ev.target.closest&&ev.target.closest('[data-go]');if(t)go(t.dataset.go)});
+
+
+/* ===== Statistik: pembantu ===== */
+const fmt3=n=>n.toLocaleString('id-ID',{maximumFractionDigits:3});
+const ST=pts=>{const n=pts.length,mx=pts.reduce((s,p)=>s+p[0],0)/n,my=pts.reduce((s,p)=>s+p[1],0)/n;let sxx=0,syy=0,sxy=0;pts.forEach(p=>{sxx+=(p[0]-mx)**2;syy+=(p[1]-my)**2;sxy+=(p[0]-mx)*(p[1]-my)});
+ const b=sxx?sxy/sxx:0,a=my-b*mx,r=(sxx&&syy)?sxy/Math.sqrt(sxx*syy):0;let sse=0;pts.forEach(p=>{sse+=(p[1]-a-b*p[0])**2});return{n,mx,my,sxx,syy,sxy,b,a,r,r2:r*r,sse}};
+function scat(el,o){
+ const W=320,H=250,L=44,Rg=12,Tp=12,B=36,pw=W-L-Rg,ph=H-Tp-B;el.setAttribute('viewBox','0 0 '+W+' '+H);
+ const X=x=>L+(x-o.xr[0])/(o.xr[1]-o.xr[0])*pw,Y=y=>Tp+ph-(y-o.yr[0])/(o.yr[1]-o.yr[0])*ph,ix=px=>o.xr[0]+(px-L)/pw*(o.xr[1]-o.xr[0]),iy=py=>o.yr[0]+(Tp+ph-py)/ph*(o.yr[1]-o.yr[0]);
+ const cid='cp'+(el.id||'x');let g='';
+ for(let i=0;i<=(o.xn||5);i++){const v=o.xr[0]+(o.xr[1]-o.xr[0])*i/(o.xn||5);g+='<line x1="'+X(v)+'" y1="'+Tp+'" x2="'+X(v)+'" y2="'+(Tp+ph)+'" stroke="#fff" stroke-opacity=".1"/><text x="'+X(v)+'" y="'+(Tp+ph+14)+'" text-anchor="middle" style="font-size:10px">'+fmt(v)+'</text>'}
+ for(let i=0;i<=(o.yn||5);i++){const v=o.yr[0]+(o.yr[1]-o.yr[0])*i/(o.yn||5);g+='<line x1="'+L+'" y1="'+Y(v)+'" x2="'+(L+pw)+'" y2="'+Y(v)+'" stroke="#fff" stroke-opacity=".1"/><text x="'+(L-5)+'" y="'+(Y(v)+3)+'" text-anchor="end" style="font-size:10px">'+fmt(v)+'</text>'}
+ g+='<path d="M'+L+' '+Tp+'V'+(Tp+ph)+'H'+(L+pw)+'" stroke="#fff" stroke-opacity=".6" fill="none"/><text x="'+(L+pw/2)+'" y="'+(H-5)+'" text-anchor="middle" style="font-size:11px">'+(o.xl||'x')+'</text><text transform="translate(11 '+(Tp+ph/2)+') rotate(-90)" text-anchor="middle" style="font-size:11px">'+(o.yl||'y')+'</text>';
+ g+='<clipPath id="'+cid+'"><rect x="'+L+'" y="'+Tp+'" width="'+pw+'" height="'+ph+'"/></clipPath>';
+ const ln=(l,c,w,d)=>'<path d="M'+X(o.xr[0])+' '+Y(l[0]+l[1]*o.xr[0])+'L'+X(o.xr[1])+' '+Y(l[0]+l[1]*o.xr[1])+'" stroke="'+c+'" stroke-width="'+w+'" '+(d?'stroke-dasharray="6 4" ':'')+'clip-path="url(#'+cid+')" fill="none"/>';
+ if(o.line2)g+=ln(o.line2,'#FFFFFF',1.6,1);
+ if(o.line){g+=ln(o.line,'#22D3EE',2.5,0);if(o.res)o.pts.forEach(p=>{g+='<line x1="'+X(p[0])+'" y1="'+Y(p[1])+'" x2="'+X(p[0])+'" y2="'+Y(o.line[0]+o.line[1]*p[0])+'" stroke="#FF5C8A" stroke-width="2" clip-path="url(#'+cid+')"/>'})}
+ o.pts.forEach((p,i)=>{g+='<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="'+(i===o.hl?7:5)+'" fill="'+(i===o.hl?'#FF5C8A':'#FFB547')+'" stroke="#fff" stroke-width="1" clip-path="url(#'+cid+')"/>'});
+ if(o.mark)g+='<line x1="'+X(o.mark[0])+'" y1="'+(Tp+ph)+'" x2="'+X(o.mark[0])+'" y2="'+Y(o.mark[1])+'" stroke="#FF5C8A" stroke-dasharray="4 3" clip-path="url(#'+cid+')"/><circle cx="'+X(o.mark[0])+'" cy="'+Y(o.mark[1])+'" r="6" fill="#FF5C8A" stroke="#fff" stroke-width="1.5" clip-path="url(#'+cid+')"/>';
+ el.innerHTML=g;return{X,Y,ix,iy}}
+const eqM=(a,b)=>'<math display="block"><mover><mi>y</mi><mo>^</mo></mover><mo>=</mo><mn>'+fmt(a)+'</mn><mo>'+(b<0?'−':'+')+'</mo><mn>'+fmt(Math.abs(b))+'</mn><mi>x</mi></math>';
+function interp(r){const k=Math.abs(r),ar=r>.1?'positif':r<-.1?'negatif':'',ks=k>=.7?'kuat':k>=.4?'sedang':k>.1?'lemah':'';return ks?'Asosiasi linear '+ar+' '+ks+'.':'Hampir tidak ada asosiasi linear.'}
+const PRE=[{"n": "Jam belajar dan nilai ulangan", "xl": "Jam belajar per minggu", "yl": "Nilai", "xr": [0, 10], "yr": [40, 100], "xn": 5, "yn": 6, "pts": [[1, 48], [1.5, 55], [2, 52], [2.5, 60], [3, 63], [3.5, 66], [4, 70], [5, 74], [5.5, 79], [6, 77], [7, 86], [8, 90]]}, {"n": "Usia mobil dan harga jual", "xl": "Usia mobil (tahun)", "yl": "Harga (juta Rp)", "xr": [0, 12], "yr": [0, 350], "xn": 6, "yn": 7, "pts": [[1, 320], [2, 290], [2, 300], [3, 260], [4, 230], [5, 205], [5, 215], [6, 180], [7, 150], [8, 140], [9, 105], [10, 90]]}, {"n": "Suhu udara dan penjualan es krim", "xl": "Suhu (°C)", "yl": "Es krim terjual", "xr": [20, 40], "yr": [0, 100], "xn": 4, "yn": 5, "pts": [[24, 22], [26, 30], [27, 28], [28, 41], [29, 45], [30, 52], [31, 50], [32, 64], [33, 66], [34, 75], [35, 78], [36, 90]]}, {"n": "Tinggi badan dan nilai matematika", "xl": "Tinggi badan (cm)", "yl": "Nilai", "xr": [140, 190], "yr": [40, 100], "xn": 5, "yn": 6, "pts": [[150, 72], [152, 85], [155, 64], [157, 78], [160, 90], [162, 70], [165, 82], [168, 61], [170, 88], [172, 75], [175, 68], [178, 80]]}];
+
+/* Eksplorasi */
+function drawE(){
+ const P=PRE[+$('#ps').value],s=ST(P.pts);
+ scat($('#sv1'),{pts:P.pts,xr:P.xr,yr:P.yr,xn:P.xn,yn:P.yn,xl:P.xl,yl:P.yl,line:$('#sl').checked?[s.a,s.b]:null,res:$('#sres').checked&&$('#sl').checked});
+ $('#so').innerHTML='<div>Banyak titik<b>'+s.n+'</b></div><div>r<b>'+fmt3(s.r)+'</b></div><div>Gradien b<b>'+fmt(s.b)+'</b></div><div>r²<b>'+fmt3(s.r2)+'</b></div>';
+ $('#seq').innerHTML=eqM(s.a,s.b);$('#sint').textContent=interp(s.r)+' Ingat: ini asosiasi, belum tentu sebab-akibat.'}
+PRE.forEach((P,i)=>{const o=document.createElement('option');o.value=i;o.textContent=P.n;$('#ps').appendChild(o)});
+['ps','sl','sres'].forEach(i=>$('#'+i).addEventListener('input',drawE));drawE();
+let UP=[[2,2],[3,4],[5,5],[7,8],[8,7]],SM=null;
+function drawS(){
+ SM=scat($('#sv2'),{pts:UP,xr:[0,10],yr:[0,10],xn:5,yn:5,xl:'x',yl:'y',line:UP.length>1&&ST(UP).sxx>0?[ST(UP).a,ST(UP).b]:null});
+ if(UP.length<2||ST(UP).sxx==0){$('#so2').innerHTML='<div>Banyak titik<b>'+UP.length+'</b></div><div>Tambah titik dengan x berbeda</div>';$('#seq2').innerHTML='';return}
+ const s=ST(UP);$('#so2').innerHTML='<div>Banyak titik<b>'+s.n+'</b></div><div>r<b>'+fmt3(s.r)+'</b></div><div>Gradien b<b>'+fmt(s.b)+'</b></div><div>r²<b>'+fmt3(s.r2)+'</b></div>';$('#seq2').innerHTML=eqM(s.a,s.b)}
+$('#sv2').addEventListener('click',e=>{const sv=$('#sv2'),r=sv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*320,y=(e.clientY-r.top)/r.height*250,px=SM.ix(x),py=SM.iy(y);
+ if(px<0||px>10||py<0||py>10)return;UP.push([Math.round(px*10)/10,Math.round(py*10)/10]);if(UP.length>40)UP.shift();drawS()});
+$('#sundo').onclick=()=>{UP.pop();drawS()};$('#sclr').onclick=()=>{UP=[];drawS()};
+$('#srand').onclick=()=>{const k=(Math.random()*2-1)*.9;UP=[];for(let i=0;i<12;i++){const x=1+Math.random()*8,y=5+k*(x-5)*.9+(Math.random()-.5)*3;UP.push([Math.round(x*10)/10,Math.round(Math.max(.3,Math.min(9.7,y))*10)/10])}drawS()};
+drawS();
+
+/* Pemantik: jam belajar dan nilai */
+function pem(){const P=PRE[0],s=ST(P.pts),x=+$('#pmx').value,y=s.a+s.b*x;
+ $('#pmxv').textContent=fmt(x);
+ scat($('#pms'),{pts:P.pts,xr:P.xr,yr:P.yr,xn:P.xn,yn:P.yn,xl:P.xl,yl:P.yl,line:[s.a,s.b],mark:[x,y]});
+ $('#pmo').innerHTML='<div>Jam belajar<b>'+fmt(x)+'</b></div><div>Nilai diperkirakan<b>'+fmt(Math.round(y*10)/10)+'</b></div><div>Gradien<b>'+fmt(s.b)+' per jam</b></div>'}
+$('#pmx').addEventListener('input',pem);pem();
+
+/* Menjodohkan */
+const J=[["Tinggi badan dan berat badan siswa", "Dua variabel numerik"], ["Warna mata dan jenis kendaraan pilihan", "Dua variabel kategorik"], ["Nilai r = -0,92", "Asosiasi negatif kuat"], ["Nilai r = 0,05", "Hampir tidak ada asosiasi linear"], ["Titik yang jauh dari pola data lain", "Pencilan"]];
+const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+let jsel=null,jdone=0,jtry=0;
+function jInit(){
+ jsel=null;jdone=0;jtry=0;$('#jf').innerHTML='';$('#sj').textContent='0/5 cocok';
+ $('#jl').innerHTML='';$('#jr').innerHTML='';
+ J.forEach((p,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=p[0];b.dataset.i=i;b.onclick=()=>{if(b.disabled)return;document.querySelectorAll('#jl .opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');jsel=i};$('#jl').appendChild(b)});
+ shuf(J.map((p,i)=>[p[1],i])).forEach(([t,i])=>{const b=document.createElement('button');b.className='opt';b.textContent=t;b.dataset.i=i;b.style.textAlign='center';b.onclick=()=>{
+  if(jsel===null){$('#jf').innerHTML='<div class="fb bad">Pilih soal di kiri dulu.</div>';return}
+  jtry++;const L=$('#jl').children[jsel];
+  if(jsel==i){L.classList.remove('sel');L.classList.add('ok');L.disabled=true;b.classList.add('ok');b.disabled=true;award('j'+i);jsel=null;jdone++;$('#sj').textContent=jdone+'/5 cocok';
+   $('#jf').innerHTML=jdone==5?`<div class="fb ok">Semua cocok dengan ${jtry} percobaan. ${jtry==5?'Sempurna!':'Coba lagi untuk mengurangi kesalahan.'}</div>`:'<div class="fb ok">'+cheer(true)+'</div>'}
+  else{b.classList.add('bad');setTimeout(()=>b.classList.remove('bad'),600);$('#jf').innerHTML='<div class="fb bad">'+cheer(false)+' Hitung ulang dengan rumus di tab Materi.</div>'}
+ };$('#jr').appendChild(b)});
+}
+$('#jreset').onclick=jInit;jInit();
+
+/* Isian */
+const I=[["Dari 60 siswa yang sarapan, 45 berkonsentrasi baik. Persentasenya … %.", 75, "45/60 × 100 = 75"], ["Diketahui Sxy = 75 dan Sxx = 10. Gradien garis regresi b = …", 7.5, "b = Sxy / Sxx = 75 / 10 = 7,5"], ["Diketahui x̄ = 4, ȳ = 66, dan b = 7,5. Nilai a = ȳ - b x̄ = …", 36, "a = 66 - 7,5 × 4 = 66 - 30 = 36"], ["Model ŷ = 36 + 7,5x. Prediksi untuk x = 5,5 adalah …", 77.25, "ŷ = 36 + 7,5 × 5,5 = 77,25"], ["Jika r = 0,8, maka r² = … % (jawab dalam persen).", 64, "r² = 0,8² = 0,64 = 64%"]];
+let isc=0,idn=0;
+function iInit(){isc=0;idn=0;$('#si').textContent='Skor 0/5';const c=$('#il');c.innerHTML='';
+ I.forEach((q,i)=>{const d=document.createElement('div');d.className='card';
+  d.innerHTML=`<div class="q">${i+1}. ${q[0]}</div><div class="row"><input type="text" inputmode="decimal" aria-label="Jawaban soal ${i+1}" size="10"><button class="btn">Periksa</button></div><div class="fb-w"></div>`;
+  const inp=d.querySelector('input'),btn=d.querySelector('button'),fb=d.querySelector('.fb-w');
+  const go=()=>{if(btn.disabled)return;const v=parseFloat(inp.value.replace(',','.').replace(/[^0-9.\-]/g,''));
+   if(isNaN(v)){fb.innerHTML='<div class="fb bad">Isi dengan angka.</div>';return}
+   btn.disabled=inp.disabled=true;idn++;
+   if(Math.abs(v-q[1])<.01){isc++;award('i'+i);fb.innerHTML='<div class="fb ok"><b>'+cheer(true)+'</b> '+M(q[2])+'</div>'}
+   else fb.innerHTML='<div class="fb bad"><b>'+cheer(false)+'</b> Pembahasan: '+M(q[2])+'</div>';
+   $('#si').textContent='Skor '+isc+'/5'+(idn==5?' (selesai)':'')};
+  btn.onclick=go;inp.onkeydown=e=>{if(e.key=='Enter')go()};c.appendChild(d)})}
+$('#ireset').onclick=iInit;iInit();
+
+/* Pilihan ganda */
+const P=[["Pasangan variabel yang keduanya numerik adalah …", ["warna baju dan hobi", "tinggi badan dan berat badan", "jenis kelamin dan kelas", "golongan darah dan agama"], 1, "Tinggi dan berat badan sama-sama hasil pengukuran bilangan."], ["Titik-titik pada diagram pencar naik dari kiri bawah ke kanan atas. Asosiasinya …", ["negatif", "positif", "tidak ada", "selalu sempurna"], 1, "x naik dan y cenderung naik: asosiasi positif."], ["Di antara nilai r berikut, hubungan linear terkuat ditunjukkan oleh …", ["0,5", "-0,9", "0,7", "-0,3"], 1, "|-0,9| = 0,9 adalah yang terbesar."], ["Prediksi untuk x di luar rentang data disebut …", ["interpolasi", "ekstrapolasi", "korelasi", "regresi"], 1, "Prediksi di luar rentang data adalah ekstrapolasi."], ["Penjualan es krim dan kasus tenggelam sama-sama naik di musim panas. Penjelasan yang paling tepat …", ["es krim menyebabkan tenggelam", "keduanya dipengaruhi cuaca panas", "tenggelam menyebabkan es krim laku", "datanya pasti keliru"], 1, "Cuaca panas adalah variabel pengganggu yang memengaruhi keduanya."]];
+let psc=0,pdn=0;
+function pInit(){psc=0;pdn=0;$('#sp').textContent='Skor 0/5';const c=$('#pl');c.innerHTML='';
+ P.forEach((q,i)=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class="q">${i+1}. ${q[0]}</div>`;
+  const fb=document.createElement('div');const bs=[];
+  q[1].forEach((t,j)=>{const b=document.createElement('button');b.className='opt';b.textContent=String.fromCharCode(65+j)+'. '+t;bs.push(b);
+   b.onclick=()=>{bs.forEach(x=>x.disabled=true);pdn++;bs[q[2]].classList.add('ok');
+    if(j==q[2]){psc++;award('p'+i);fb.innerHTML='<div class="fb ok"><b>'+cheer(true)+'</b> '+M(q[3])+'</div>'}
+    else{b.classList.add('bad');fb.innerHTML='<div class="fb bad"><b>'+cheer(false)+'</b> '+M(q[3])+'</div>'}
+    $('#sp').textContent='Skor '+psc+'/5'+(pdn==5?' (selesai)':'')};d.appendChild(b)});
+  d.appendChild(fb);c.appendChild(d)})}
+$('#preset').onclick=pInit;pInit();
+
+/* Skor total + perayaan */
+/* Bank soal: [topik, tingkat, soal, opsi|null, kunci, pembahasan] */
+const BK=[
+["V", 1, "Variabel berikut yang termasuk data kategorik adalah …", ["Tinggi badan", "Golongan darah", "Berat badan", "Suhu udara"], 1, "Golongan darah (A, B, AB, O) berupa kelompok atau label, bukan hasil pengukuran bilangan."],
+["V", 1, "Dalam penelitian pengaruh jam belajar terhadap nilai ulangan, variabel terikat (y) adalah …", ["jam belajar", "nilai ulangan", "nama siswa", "jumlah soal"], 1, "Variabel terikat adalah yang dipengaruhi, yaitu nilai ulangan. Jam belajar adalah variabel bebas (x)."],
+["V", 1, "Data bivariat adalah data yang …", ["hanya memuat satu variabel", "memuat dua variabel yang diamati pada setiap subjek", "selalu berupa bilangan bulat", "selalu diperoleh dari sensus"], 1, "Bivariat berarti dua variabel yang diamati pada subjek yang sama."],
+["V", 2, "Pasangan variabel yang keduanya numerik adalah …", ["jenis kelamin dan hobi", "tinggi badan dan berat badan", "warna rambut dan kelas", "agama dan asal daerah"], 1, "Tinggi badan dan berat badan sama-sama hasil pengukuran bilangan."],
+["V", 2, "Untuk menggambarkan hubungan dua variabel numerik digunakan …", ["diagram lingkaran", "diagram pencar", "tabel frekuensi satu arah", "diagram batang tunggal"], 1, "Diagram pencar menggambar tiap subjek sebagai titik (x, y)."],
+["V", 2, "Tabel dua arah (tabel kontingensi) dipakai untuk meringkas data dua variabel …", ["kategorik", "numerik kontinu saja", "yang bernilai negatif", "yang berkorelasi"], 0, "Tabel dua arah menghitung banyak subjek pada setiap kombinasi kategori dua variabel kategorik."],
+["A", 1, "Dari 60 siswa yang sarapan, 45 berkonsentrasi baik. Persentase siswa berkonsentrasi baik pada kelompok ini … %.", null, 75, "45/60 × 100 = 75"],
+["A", 1, "Dari 40 siswa yang tidak sarapan, 16 berkonsentrasi baik. Persentasenya … %.", null, 40, "16/40 × 100 = 40"],
+["A", 2, "Persentase siswa yang berkonsentrasi baik adalah 75% pada kelompok sarapan dan 40% pada kelompok tidak sarapan. Selisihnya … poin persentase.", null, 35, "75 - 40 = 35"],
+["A", 2, "Persentase siswa yang suka matematika: kelas X 55% dan kelas XI 54%. Kesimpulan yang paling sesuai adalah …", ["ada asosiasi kuat antara kelas dan kesukaan", "hampir tidak ada asosiasi antara kelas dan kesukaan", "kelas menyebabkan kesukaan", "kelas XI pasti lebih suka"], 1, "Persentasenya hampir sama (selisih 1 poin), jadi asosiasinya hampir tidak ada."],
+["A", 2, "Untuk membandingkan dua kelompok yang jumlah anggotanya berbeda pada tabel dua arah, sebaiknya digunakan …", ["jumlah frekuensi saja", "persentase dalam tiap kelompok", "selisih frekuensi terbesar", "rata-rata nilai"], 1, "Persentase dalam tiap kelompok membuat perbandingan adil walau ukuran kelompok berbeda."],
+["A", 3, "Dari 90 siswa pengguna motor, 27 terlambat. Dari 60 siswa pejalan kaki, 9 terlambat. Selisih persentase terlambat (motor dikurangi jalan kaki) … poin persentase.", null, 15, "Motor: 27/90 × 100 = 30. Jalan kaki: 9/60 × 100 = 15. Selisih = 30 - 15 = 15"],
+["A", 3, "Persentase siswa terlambat: pengguna motor 30% dan pejalan kaki 15%. Kesimpulan yang tepat adalah …", ["ada asosiasi: persentase terlambat pengguna motor lebih besar", "tidak ada asosiasi sama sekali", "motor menyebabkan siswa terlambat", "berjalan kaki membuat siswa pasti tepat waktu"], 0, "Persentasenya berbeda, jadi ada asosiasi. Namun asosiasi belum membuktikan sebab-akibat."],
+["P", 1, "Titik-titik pada diagram pencar naik dari kiri bawah ke kanan atas. Asosiasinya …", ["positif", "negatif", "tidak ada", "tak terhingga"], 0, "Jika x naik dan y cenderung naik, asosiasinya positif."],
+["P", 1, "Titik-titik yang turun dari kiri atas ke kanan bawah menunjukkan asosiasi …", ["positif", "negatif", "tidak ada", "selalu kuat"], 1, "Jika x naik dan y cenderung turun, asosiasinya negatif."],
+["P", 1, "Titik tersebar acak tanpa pola jelas menunjukkan …", ["asosiasi positif kuat", "asosiasi negatif kuat", "hampir tidak ada asosiasi", "hubungan sebab-akibat"], 2, "Tanpa pola, kedua variabel hampir tidak berasosiasi."],
+["P", 2, "Titik-titik berkumpul rapat mengikuti pola garis lurus. Kekuatan asosiasi liniernya …", ["lemah", "kuat", "tidak ada", "tidak dapat ditentukan"], 1, "Titik yang rapat di sekitar garis lurus menandakan asosiasi linear yang kuat."],
+["P", 2, "Titik-titik membentuk pola melengkung seperti huruf U. Pernyataan yang tepat adalah …", ["model linear sangat cocok", "asosiasi tidak linear, sehingga garis lurus kurang cocok", "r pasti sama dengan 1", "r pasti sama dengan -1"], 1, "Pola melengkung berarti hubungannya tidak linear. Garis lurus kurang tepat memodelkannya."],
+["P", 2, "Satu titik yang letaknya jauh terpisah dari pola titik-titik lainnya disebut …", ["median", "pencilan", "modus", "kuartil"], 1, "Titik yang menyimpang jauh dari pola disebut pencilan (outlier)."],
+["R", 1, "Nilai koefisien korelasi r selalu berada pada …", ["0 sampai 1", "-1 sampai 1", "-100 sampai 100", "0 sampai 100"], 1, "Secara matematis, -1 ≤ r ≤ 1."],
+["R", 1, "Nilai r = 1 berarti …", ["semua titik tepat pada garis lurus yang naik", "semua titik tepat pada garis lurus yang turun", "tidak ada hubungan", "titik membentuk lingkaran"], 0, "r = 1 adalah asosiasi linear positif sempurna."],
+["R", 1, "Di antara nilai r berikut, hubungan linear terkuat ditunjukkan oleh …", ["0,6", "-0,9", "0,3", "-0,5"], 1, "Kekuatan ditentukan oleh |r|. Nilai |-0,9| = 0,9 paling besar."],
+["R", 2, "Nilai r = -0,85 menunjukkan asosiasi …", ["positif kuat", "positif lemah", "negatif kuat", "negatif lemah"], 2, "Tanda negatif berarti arah turun, dan |r| = 0,85 berarti kuat."],
+["R", 2, "Diketahui Sxy = 28, Sxx = 20, dan Syy = 40. Nilai r (dua desimal) adalah …", null, 0.99, "r = 28 / akar (20 × 40) = 28 / akar 800 ≈ 0,99"],
+["R", 2, "Jika r = 0,9, koefisien determinasi r² sama dengan … % (jawab dalam persen).", null, 81, "r² = 0,9² = 0,81 = 81%"],
+["R", 3, "Data x = 1, 2, 3, 4, 5 dan y = 2, 4, 5, 4, 5 memiliki Sxy = 6, Sxx = 10, dan Syy = 6. Nilai r (dua desimal) adalah …", null, 0.77, "r = 6 / akar (10 × 6) = 6 / akar 60 ≈ 0,77"],
+["R", 3, "Pernyataan yang BENAR tentang koefisien korelasi adalah …", ["r = 0 berarti tidak ada hubungan apa pun", "r = 0 berarti tidak ada hubungan linear", "|r| besar pasti berarti sebab-akibat", "r berubah jika satuan data diubah"], 1, "r = 0 hanya menunjukkan tidak ada hubungan linear, hubungan melengkung masih mungkin. r tidak berubah oleh perubahan satuan."],
+["G", 1, "Persamaan garis regresi linear dinyatakan dengan …", ["ŷ = a + bx", "y = ax²", "ŷ = b / x", "r = a + bx"], 0, "Garis regresi linear berbentuk ŷ = a + bx."],
+["G", 1, "Pada ŷ = a + bx, nilai b disebut …", ["gradien (kemiringan) garis", "titik potong sumbu x", "koefisien determinasi", "rata-rata y"], 0, "b adalah gradien: perubahan rata-rata y untuk kenaikan 1 satuan x."],
+["G", 1, "Garis regresi linear selalu melalui titik …", ["(0, 0)", "(x̄, ȳ)", "(x terbesar, y terbesar)", "(x terkecil, y terkecil)"], 1, "Karena a = ȳ - b x̄, garis selalu melalui (x̄, ȳ)."],
+["G", 2, "Data x = 1, 2, 3, 4, 5 dan y = 2, 4, 5, 4, 5 memiliki Sxy = 6 dan Sxx = 10. Gradien garis regresi b = …", null, 0.6, "b = Sxy / Sxx = 6 / 10 = 0,6"],
+["G", 2, "Lanjutan: dengan b = 0,6, x̄ = 3, dan ȳ = 4, nilai a = ȳ - b x̄ = …", null, 2.2, "a = 4 - 0,6 × 3 = 4 - 1,8 = 2,2"],
+["G", 2, "Data x = 2, 4, 6, 8 dan y = 3, 5, 9, 11 memiliki Sxy = 28 dan Sxx = 20. Nilai b = …", null, 1.4, "b = 28 / 20 = 1,4"],
+["G", 2, "Pada ŷ = 36 + 7,5x (x jam belajar, y nilai), angka 7,5 berarti …", ["nilai awal siswa sebelum belajar", "setiap tambahan 1 jam belajar, nilai diperkirakan naik 7,5", "nilai maksimum siswa", "banyak siswa yang belajar"], 1, "Gradien 7,5 berarti kenaikan 1 jam belajar dikaitkan dengan kenaikan nilai rata-rata 7,5."],
+["G", 3, "Data x = 1, 2, 3, 4, 5 dan y = 10, 8, 7, 4, 1 memiliki x̄ = 3, ȳ = 6, Sxy = -22, dan Sxx = 10. Nilai a pada ŷ = a + bx adalah …", null, 12.6, "b = -22 / 10 = -2,2. a = 6 - (-2,2) × 3 = 6 + 6,6 = 12,6"],
+["G", 3, "Garis regresi linear (best fit) dipilih sehingga …", ["jumlah kuadrat residu sekecil mungkin", "semua titik tepat berada di garis", "garis selalu melalui titik asal", "jumlah residu terbesar"], 0, "Metode kuadrat terkecil meminimalkan jumlah kuadrat residu."],
+["Y", 1, "Model ŷ = 36 + 7,5x. Prediksi untuk x = 4 adalah …", null, 66, "ŷ = 36 + 7,5 × 4 = 36 + 30 = 66"],
+["Y", 1, "Data x berkisar dari 2 sampai 6. Prediksi untuk x = 8 disebut …", ["interpolasi", "ekstrapolasi", "korelasi", "residu"], 1, "x = 8 berada di luar rentang data, jadi ekstrapolasi."],
+["Y", 1, "Data x berkisar dari 2 sampai 6. Prediksi untuk x = 4 disebut …", ["interpolasi", "ekstrapolasi", "korelasi", "residu"], 0, "x = 4 berada di dalam rentang data, jadi interpolasi."],
+["Y", 2, "Model ŷ = 2,2 + 0,6x. Prediksi y untuk x = 6 adalah …", null, 5.8, "ŷ = 2,2 + 0,6 × 6 = 2,2 + 3,6 = 5,8"],
+["Y", 2, "Model ŷ = 1,4x. Prediksi y untuk x = 10 adalah …", null, 14, "ŷ = 1,4 × 10 = 14"],
+["Y", 2, "Seorang siswa belajar 3 jam dan nilainya 60. Dengan model ŷ = 36 + 7,5x, residu (y - ŷ) adalah …", null, 1.5, "ŷ = 36 + 7,5 × 3 = 58,5. Residu = 60 - 58,5 = 1,5"],
+["Y", 3, "Model ŷ = 36 + 7,5x memprediksi nilai 148,5 untuk x = 15 jam, padahal nilai maksimum 100. Hal ini menunjukkan …", ["model selalu benar", "ekstrapolasi jauh dapat menghasilkan prediksi yang tidak masuk akal", "r pasti sama dengan 1", "semua residu sama dengan 0"], 1, "Pola linear belum tentu berlanjut di luar rentang data, sehingga ekstrapolasi jauh berisiko."],
+["Y", 3, "Koefisien determinasi r² = 0,81 berarti … % variasi y dijelaskan oleh hubungan linear dengan x.", null, 81, "r² = 0,81 = 81%"],
+["Y", 3, "Model ŷ = 36 + 7,5x. Prediksi nilai untuk x = 5,5 adalah …", null, 77.25, "ŷ = 36 + 7,5 × 5,5 = 36 + 41,25 = 77,25"],
+["S", 1, "Korelasi positif yang kuat antara dua variabel berarti …", ["pasti satu variabel menyebabkan yang lain", "keduanya cenderung naik bersama, belum tentu sebab-akibat", "keduanya tidak berhubungan", "r = 0"], 1, "Korelasi menunjukkan keterkaitan pola, bukan bukti sebab-akibat."],
+["S", 1, "Variabel yang memengaruhi kedua variabel yang diamati sehingga keduanya tampak berhubungan disebut …", ["variabel pengganggu (confounding)", "variabel bebas murni", "pencilan", "residu"], 0, "Variabel pengganggu menciptakan asosiasi tanpa adanya sebab-akibat langsung."],
+["S", 2, "Penjualan es krim dan jumlah orang berenang berkorelasi positif kuat. Penjelasan yang paling masuk akal adalah …", ["es krim membuat orang berenang", "berenang membuat orang membeli es krim", "keduanya dipengaruhi cuaca panas", "data pasti salah"], 2, "Cuaca panas meningkatkan keduanya (variabel pengganggu), bukan satu menyebabkan yang lain."],
+["S", 2, "Cara paling kuat untuk menunjukkan hubungan sebab-akibat adalah …", ["melihat diagram pencar saja", "menghitung r saja", "eksperimen terkendali dengan pengelompokan acak", "mengumpulkan data sebanyak mungkin tanpa kontrol"], 2, "Eksperimen terkendali dengan pengelompokan acak dapat memisahkan pengaruh variabel pengganggu."],
+["S", 3, "Satu pencilan yang jauh dari pola data dapat …", ["mengubah r dan garis regresi secara berarti", "tidak pernah memengaruhi r", "selalu membuat r = 1", "menghapus semua data"], 0, "Titik yang jauh dapat menarik garis dan mengubah r dengan besar, sehingga perlu diperiksa."]];
+const TL={V:'Variabel',A:'Asosiasi kategorik',P:'Diagram pencar',R:'Korelasi',G:'Regresi',Y:'Prediksi',S:'Sebab-akibat'},LV=['','Mudah','Sedang','Sulit'];
+let bsc=0,bdn=0;
+function bGo(){
+ const t=$('#ft').value,lv=$('#fl').value,L=shuf(BK.filter(q=>(!t||q[0]==t)&&(!lv||q[1]==lv)));
+ bsc=0;bdn=0;$('#bn').textContent=L.length+' soal';$('#bs').textContent='Benar 0/0';
+ const c=$('#bl');c.innerHTML=L.length?'':'<div class="card">Tidak ada soal untuk pilihan ini.</div>';
+ const fin=ok=>{bdn++;if(ok)bsc++;$('#bs').textContent='Benar '+bsc+'/'+bdn;if(bdn==L.length){c.insertAdjacentHTML('beforeend','<div class="f" style="white-space:normal">Nilai akhir: '+Math.round(bsc/L.length*100)+' dari 100</div>');if(bsc==L.length)boom()}};
+ L.forEach((q,i)=>{const d=document.createElement('div');d.className='card';
+  d.innerHTML='<div class="q"><span class="tag">'+TL[q[0]]+'</span><span class="tag">'+LV[q[1]]+'</span><br>'+(i+1)+'. '+q[2]+'</div>';
+  const fb=document.createElement('div'),show=ok=>{fb.innerHTML='<div class="fb '+(ok?'ok"><b>'+cheer(true)+'</b> ':'bad"><b>'+cheer(false)+'</b> Pembahasan: ')+M(q[5])+'</div>'};
+  if(q[3]){const bs=[];q[3].forEach((tx,j)=>{const b=document.createElement('button');b.className='opt';b.textContent=String.fromCharCode(65+j)+'. '+tx;bs.push(b);b.onclick=()=>{bs.forEach(x=>x.disabled=true);bs[q[4]].classList.add('ok');if(j!=q[4])b.classList.add('bad');show(j==q[4]);if(j==q[4])award('b'+BK.indexOf(q));fin(j==q[4])};d.appendChild(b)})}
+  else{const r=document.createElement('div');r.className='row';r.innerHTML='<input type="text" inputmode="decimal" size="10" aria-label="Jawaban soal '+(i+1)+'"><button class="btn">Periksa</button>';const inp=r.querySelector('input'),bt=r.querySelector('button');const go=()=>{if(bt.disabled)return;const v=parseFloat(inp.value.replace(',','.').replace(/[^0-9.\-]/g,''));if(isNaN(v))return;bt.disabled=inp.disabled=true;const ok=Math.abs(v-q[4])<.01;show(ok);if(ok)award('b'+BK.indexOf(q));fin(ok)};bt.onclick=go;inp.onkeydown=e=>{if(e.key=='Enter')go()};d.appendChild(r)}
+  d.appendChild(fb);c.appendChild(d)})}
+['#ft','#fl'].forEach(s=>{$(s).onchange=bGo});$('#bgo').onclick=bGo;bGo();
+
+const got={};
+function boom(){for(let i=0;i<36;i++){const s=document.createElement('span');s.className='cf';s.textContent=['🎉','⭐','✨','🔵'][i%4];s.style.left=Math.random()*100+'vw';s.style.setProperty('--x',(Math.random()*160-80)+'px');s.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),3000)}}
+function upd(){const m=s=>+(($(s).textContent.match(/(\d+)\//)||[0,0])[1]);const v={j:m('#sj'),i:m('#si'),p:m('#sp')};for(const k in v){if(v[k]==5&&!got[k]){got[k]=1;boom()}else if(v[k]<5)got[k]=0}}
+['#sj','#si','#sp'].forEach(s=>new MutationObserver(upd).observe($(s),{childList:true,characterData:true,subtree:true}));
+/* ===== Kebun, musik, dan efek suara ===== */
+const TOT=15+BK.length+5,KEYS='sb_kebun_v1';
+const SP=[{n:'Bunga Matahari',c:'#FFC933'},{n:'Tulip',c:'#FF5C8A'},{n:'Aster',c:'#FFFFFF'},{n:'Kaktus',c:'#19C79A'},{n:'Sakura Mini',c:'#FFB3D1'},{n:'Lavender',c:'#9B7CFF'}];
+const SN=['Benih','Tunas','Berdaun','Mekar!'],GRN='#2FA36B',GRN2='#46C98A';
+let gs=new Set();try{gs=new Set(JSON.parse(localStorage.getItem(KEYS)||'[]'))}catch(e){}
+const STG=w=>w>=8?3:w>=3?2:w>=1?1:0;
+const leaf=(x,y,r,k)=>`<ellipse cx="${x}" cy="${y}" rx="${7*k}" ry="${3.4*k}" fill="${GRN2}" transform="rotate(${r} ${x} ${y})"/>`;
+function head(t){
+ if(t==0){let s='';for(let i=0;i<12;i++)s+=`<ellipse cx="0" cy="-12" rx="4.2" ry="8" fill="#FFC933" transform="rotate(${i*30})"/>`;return s+'<circle r="8.5" fill="#7B4A21"/><circle r="4" fill="#5A3416"/>'}
+ if(t==1)return '<path d="M-11 -1 Q-14 -24 0 -30 Q14 -24 11 -1 Q0 5 -11 -1Z" fill="#FF5C8A"/><path d="M-5 -2 Q-3 -22 0 -30 Q3 -22 5 -2Z" fill="#FF8FB1"/>';
+ if(t==2){let s='';for(let i=0;i<10;i++)s+=`<ellipse cx="0" cy="-10" rx="3.4" ry="8.5" fill="#fff" stroke="#C9D2E8" stroke-width=".8" transform="rotate(${i*36})"/>`;return s+'<circle r="5" fill="#FFC933"/>'}
+ if(t==5){let s='';for(let i=0;i<7;i++)s+=`<ellipse cx="${i%2?3:-3}" cy="${-i*5}" rx="4" ry="3.4" fill="${i%3?'#9B7CFF':'#B79DFF'}"/>`;return s}
+ return ''}
+function plantG(t,s,x,y){
+ let o=`<path d="M${x-20} ${y} L${x+20} ${y} L${x+15} ${y+22} L${x-15} ${y+22}Z" fill="#C8683A"/><rect x="${x-23}" y="${y-4}" width="46" height="8" rx="4" fill="#E07B47"/><ellipse cx="${x}" cy="${y-3}" rx="18" ry="3.5" fill="#5A3A22"/>`;
+ const b=y-4;
+ if(s==0)return o+`<ellipse cx="${x}" cy="${b-1}" rx="3.2" ry="2.1" fill="#8B5E34"/>`;
+ if(t==3){const H=[0,16,30,42][s];
+  o+=`<rect x="${x-8}" y="${b-H}" width="16" height="${H}" rx="8" fill="#19C79A"/><path d="M${x-3} ${b-H+7}V${b-3}M${x+3} ${b-H+7}V${b-3}" stroke="#0E9F78" stroke-width="1.5"/>`;
+  const ay=b-H*.4;
+  if(s>=2)o+=`<rect x="${x-18}" y="${ay-3}" width="12" height="6" rx="3" fill="#19C79A"/><rect x="${x-21}" y="${ay-16}" width="8" height="19" rx="4" fill="#19C79A"/>`;
+  if(s>=3)o+=`<rect x="${x+6}" y="${ay-3}" width="12" height="6" rx="3" fill="#19C79A"/><rect x="${x+13}" y="${ay-16}" width="8" height="19" rx="4" fill="#19C79A"/><circle cx="${x}" cy="${b-H-2}" r="6" fill="#FF5C8A"/><circle cx="${x}" cy="${b-H-2}" r="2.5" fill="#FFD166"/>`;
+  return o}
+ if(t==4&&s>=2){
+  o+=`<path d="M${x-3} ${b} L${x-2} ${b-32} L${x+2} ${b-32} L${x+3} ${b}Z" fill="#8B5E34"/>`;
+  const c=s==3?'#FFB3D1':'#3DBE7A';
+  o+=`<circle cx="${x}" cy="${b-44}" r="15" fill="${c}"/><circle cx="${x-13}" cy="${b-34}" r="11" fill="${c}"/><circle cx="${x+13}" cy="${b-34}" r="11" fill="${c}"/>`;
+  if(s==3)o+=[[-8,-48],[6,-50],[-15,-36],[14,-38],[0,-38],[-4,-30],[9,-30]].map(q=>`<circle cx="${x+q[0]}" cy="${b+q[1]}" r="2.6" fill="#FF8FB1"/>`).join('');
+  return o}
+ const H=[0,16,32,48][s];
+ o+=`<path d="M${x} ${b} V${b-H}" stroke="${GRN}" stroke-width="3.2" stroke-linecap="round"/>`+leaf(x-8,b-H*.35,-30,1)+leaf(x+8,b-H*.5,30,1);
+ if(s>=2)o+=leaf(x-8,b-H*.72,-30,1.1)+leaf(x+8,b-H*.9,30,1.1);
+ if(s==2)o+=`<ellipse cx="${x}" cy="${b-H-5}" rx="4.5" ry="6.5" fill="${t==0?'#6DBE4A':SP[t].c}" stroke="#00000022"/>`;
+ if(s==3)o+=`<g transform="translate(${x} ${b-H})">${head(t)}</g>`;
+ return o}
+function sceneSvg(W,act,ch){
+ const px=[70,180,290],py=[115,265];
+ let o='<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD3FF"/><stop offset="1" stop-color="#EAF8FF"/></linearGradient></defs><rect width="360" height="340" rx="18" fill="url(#sky)"/><circle cx="320" cy="34" r="26" fill="#FFD166" opacity=".3"/><circle cx="320" cy="34" r="17" fill="#FFD166"/><ellipse cx="58" cy="38" rx="30" ry="9" fill="#fff" opacity=".85"/><ellipse cx="76" cy="31" rx="20" ry="9" fill="#fff" opacity=".85"/><rect y="330" width="360" height="10" fill="#79D39A"/>';
+ py.forEach(y=>{o+=`<rect x="22" y="${y+22}" width="316" height="6" rx="3" fill="#8B5E34"/>`});
+ for(let i=0;i<6;i++){
+  const x=px[i%3],y=py[i/3|0],w=Math.max(0,Math.min(8,W-i*8)),st=STG(w);
+  o+=`<g class="${ch===i?'pop':''}">${plantG(i,st,x,y)}</g>`;
+  if(i==act)o+=`<g class="bob"><path d="M${x+30} ${y-62} q-7 10 0 15 q7 -5 0 -15z" fill="#22A9E8"/></g>`;
+  const lock=W<i*8;
+  o+=`<text x="${x}" y="${y+44}" text-anchor="middle" style="fill:#13233F;font-size:11px;font-weight:600">${SP[i].n}</text><text x="${x}" y="${y+58}" text-anchor="middle" style="fill:#51627C;font-size:10px">${lock?'Belum ditanam':SN[st]+' · '+w+'/8'}</text>`}
+ return o}
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2300)}
+function renderGarden(ch){
+ const W=gs.size,act=W<48?Math.floor(W/8):-1,bl=Math.min(6,Math.floor(Math.min(W,48)/8));
+ $('#garden').innerHTML=sceneSvg(W,act,ch);
+ $('#chip').textContent='🌱 '+W+'/'+TOT;
+ $('#gw').textContent=W+' 💧';$('#gb').textContent=bl+'/6';
+ $('#gl').textContent=W<8?'Penyemai Pemula':W<16?'Penyiram Rajin':W<32?'Tukang Kebun':W<48?'Ahli Botani':'Raja Kebun Data';
+ $('#gbar').style.width=Math.round((W<48?(W%8)/8:1)*100)+'%';
+ $('#gnext').textContent=W<48?(8-W%8)+' jawaban benar lagi sampai '+SP[act].n+' mekar.':'Semua tanaman sudah mekar. Kebunmu sempurna!';
+ $('#gmsg').textContent=W==0?'Halo, aku Lingko! Jawab soal dengan benar untuk menyiram tanamanmu.':W<8?'Bagus! Tunas pertamamu mulai tumbuh. Terus siram ya.':W<48?'Sudah '+bl+' tanaman mekar. Lanjut kumpulkan yang lain!':'Luar biasa! Kebunmu penuh bunga. Kamu jagoan lingkaran!';
+ const has=(p,n)=>Array.from({length:n},(_,i)=>gs.has(p+i)).every(Boolean);
+ const B=[['🔗','Si Penjodoh','Menjodohkan benar semua',has('j',5)],['✏️','Raja Isian','Isian benar semua',has('i',5)],['🎯','Jago Pilgan','Pilihan ganda benar semua',has('p',5)],['📚','Penakluk Bank','20 soal bank benar',Array.from(gs).filter(k=>k[0]=='b').length>=20],['🌸','Kebun Mekar','Semua tanaman mekar',W>=48],['🧪','Ilmuwan Muda','Selesaikan 5 lab maya',['L0','L1','L2','L3','L4'].every(k=>gs.has(k))]];
+ $('#gbd').innerHTML=B.map(b=>`<div class="bdg${b[3]?' on':''}"><b>${b[0]} ${b[1]}</b><br>${b[2]}</div>`).join('')}
+function award(k,quiet){
+ if(gs.has(k))return;const b=gs.size;gs.add(k);
+ try{localStorage.setItem(KEYS,JSON.stringify(Array.from(gs)))}catch(e){}
+ let ch=-1,msg='+1 💧 Tanamanmu disiram',bl=false;
+ if(b<48){const i=Math.floor(b/8),w0=b%8,w1=w0+1;if(STG(w1)!=STG(w0))ch=i;
+  if(w1==8){msg='🌸 '+SP[i].n+' mekar!';bl=true}else if(ch>=0)msg=STG(w1)==1?'🌱 Tunas '+SP[i].n+' muncul!':'🍃 '+SP[i].n+' mulai berdaun!'}
+ else msg='+1 💧 Bonus siraman!';
+ renderGarden(ch);if(!quiet){toast(msg);sfx(bl)}if(bl)boom()}
+let rst=0;
+$('#greset').onclick=()=>{const b=$('#greset');if(!rst){rst=1;b.textContent='Yakin? Tekan lagi untuk hapus';setTimeout(()=>{rst=0;b.textContent='Mulai kebun baru'},3000);return}
+ rst=0;gs=new Set();try{localStorage.removeItem(KEYS)}catch(e){}renderGarden(-1);b.textContent='Mulai kebun baru'};
+$('#chip').onclick=()=>nav.children[T.findIndex(x=>x[0]=='kebun')].click();
+
+/* Audio (disintesis dengan Web Audio, tanpa berkas) */
+let ctx=null,bus=null,mg=null,sg=null,noiseBuf=null,timer=null,step=0,nextT=0,playing=false,vol=.5,sfxOn=true,vibe=0;
+const MF=m=>440*Math.pow(2,(m-69)/12);
+const VB=[
+ {bpm:76,sw:.14,wave:'triangle',fc:1400,len:1,prog:[[48,55,59,64],[45,55,60,64],[50,57,60,65],[43,55,59,65]],kick:[0,5],snare:[2,6],hat:.035,mel:.32,sc:[72,74,76,79,81,84]},
+ {bpm:104,sw:.05,wave:'triangle',fc:2400,len:.6,prog:[[48,55,64,67],[43,55,62,67],[45,57,64,69],[41,57,65,69]],kick:[0,3,4],snare:[2,6],hat:.05,mel:.45,sc:[76,79,81,84,86,88]},
+ {bpm:60,sw:0,wave:'sine',fc:1100,len:1.4,prog:[[45,52,59,64],[41,52,57,64],[48,55,59,64],[43,50,59,62]],kick:[],snare:[],hat:0,mel:.18,sc:[69,72,74,76,79,81]}];
+function initAudio(){
+ if(ctx)return true;const A=window.AudioContext||window.webkitAudioContext;if(!A)return false;
+ try{ctx=new A();mg=ctx.createGain();mg.gain.value=0;mg.connect(ctx.destination);bus=ctx.createGain();bus.connect(mg);
+  const dl=ctx.createDelay(1),fb=ctx.createGain(),wet=ctx.createGain();dl.delayTime.value=.375;fb.gain.value=.32;wet.gain.value=.3;
+  bus.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(mg);
+  sg=ctx.createGain();sg.gain.value=.22;sg.connect(ctx.destination);
+  noiseBuf=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  return true}catch(e){ctx=null;return false}}
+function tone(m,t,dur,v,type,fc,dest){
+ const o=ctx.createOscillator(),g=ctx.createGain(),f=ctx.createBiquadFilter();
+ f.type='lowpass';f.frequency.value=fc;o.type=type;o.frequency.value=MF(m);o.detune.value=(Math.random()-.5)*10;
+ g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+ o.connect(f);f.connect(g);g.connect(dest||bus);o.start(t);o.stop(t+dur+.05)}
+function nz(t,dur,ft,fr,v){
+ const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
+ s.buffer=noiseBuf;f.type=ft;f.frequency.value=fr;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+ s.connect(f);f.connect(g);g.connect(bus);s.start(t);s.stop(t+dur+.02)}
+function kick(t){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.32)}
+function playStep(st,t){
+ const V=VB[vibe],ch=V.prog[(st>>3)%V.prog.length],b=st%8,beat=60/V.bpm;
+ if(b==0||b==4)ch.forEach((m,i)=>tone(m,t+i*.018,beat*(b==0?3.2:1.8)*V.len,b==0?.075:.05,V.wave,V.fc));
+ if(b==0||(b==5&&vibe!=2))tone(ch[0]-12,t,beat*1.1*V.len,.17,'sine',420);
+ if(V.kick.indexOf(b)>=0)kick(t);
+ if(V.snare.indexOf(b)>=0)nz(t,.16,'bandpass',1900,.13);
+ if(V.hat)nz(t,.045,'highpass',8000,b%2?V.hat*.6:V.hat);
+ if(b%2==0&&Math.random()<V.mel)tone(V.sc[Math.floor(Math.random()*V.sc.length)],t+.01,beat*.9,.05,'sine',3000)}
+function sched(){const V=VB[vibe],e=60/V.bpm/2;
+ while(nextT<ctx.currentTime+.25){playStep(step,nextT);nextT+=e*(step%2?1-V.sw:1+V.sw);step=(step+1)%(V.prog.length*8)}}
+function startMusic(){
+ if(!initAudio())return;if(ctx.resume)ctx.resume();
+ clearInterval(timer);step=0;nextT=ctx.currentTime+.1;mg.gain.setTargetAtTime(vol,ctx.currentTime,.3);
+ timer=setInterval(sched,60);playing=true;uiMusic()}
+function stopMusic(){clearInterval(timer);if(ctx)mg.gain.setTargetAtTime(0,ctx.currentTime,.12);playing=false;uiMusic()}
+function uiMusic(){const b=$('#mplay');b.textContent=playing?'⏸':'🎵';b.setAttribute('aria-pressed',playing);b.setAttribute('aria-label',playing?'Jeda musik':'Putar musik');b.classList.toggle('on',playing)}
+function sfx(bloom){
+ if(!sfxOn||!initAudio())return;if(ctx.resume)ctx.resume();const t=ctx.currentTime;
+ if(bloom)[72,76,79,84,88].forEach((m,i)=>tone(m,t+i*.09,.5,.5,'sine',6000,sg));
+ else{tone(84,t,.35,.5,'sine',6000,sg);tone(91,t+.08,.4,.4,'sine',6000,sg)}}
+$('#mplay').onclick=()=>playing?stopMusic():startMusic();
+$('#mset').onclick=()=>{const o=$('#mpanel').classList.toggle('open');$('#mset').setAttribute('aria-expanded',o)};
+$('#mv').onchange=()=>{vibe=+$('#mv').value;if(playing)startMusic()};
+$('#mvol').oninput=()=>{vol=$('#mvol').value/100;if(playing&&ctx)mg.gain.setTargetAtTime(vol,ctx.currentTime,.05)};
+$('#msfx').onchange=()=>{sfxOn=$('#msfx').checked};
+document.addEventListener('visibilitychange',()=>{if(!playing||!ctx)return;
+ if(document.hidden){clearInterval(timer);mg.gain.setTargetAtTime(0,ctx.currentTime,.1)}
+ else{nextT=ctx.currentTime+.1;mg.gain.setTargetAtTime(vol,ctx.currentTime,.2);timer=setInterval(sched,60)}});
+
+/* ===== Beranda, eksplorasi lanjutan, ujian akhir ===== */
+const DEV={nama:'Rianti Sianturi, S.Pd, M.Pd',jabatan:'Wakil Kepala Sekolah Bidang Kurikulum',sekolah:'SMAN 4 Medan',kota:'Medan'};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let NAME='';try{NAME=localStorage.getItem('sb_nama')||''}catch(e){}
+function hi(){$('#hi').textContent=NAME?'Halo, '+NAME+'! Semoga petualanganmu menyenangkan.':'Isi namamu agar tampil di sertifikat.';$('#nm').value=NAME}
+$('#nmok').onclick=()=>{NAME=$('#nm').value.trim().slice(0,30);try{localStorage.setItem('sb_nama',NAME)}catch(e){}hi();toast(NAME?'Nama tersimpan':'Nama dikosongkan')};
+hi();
+if(DEV.nama){$('#dev').hidden=false;$('#dev').innerHTML='<h2>Pengembang</h2><p><b>'+esc(DEV.nama)+'</b><br>'+esc(DEV.jabatan)+'<br>'+esc(DEV.sekolah)+'</p><p class="mute">Media pembelajaran interaktif Matematika · Fase F · '+new Date().getFullYear()+'</p>';
+ const f=document.createElement('footer');f.className='foot';f.textContent='Dikembangkan oleh '+DEV.nama+' · '+DEV.sekolah+' · Matematika Fase F';document.querySelector('main .wrap').appendChild(f)}
+$('#mtheme').onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');d.dataset.theme=cur=='dark'?'light':'dark'};
+
+/* Ujian akhir */
+const TLN={V:'Variabel',A:'Asosiasi kategorik',P:'Diagram pencar',R:'Korelasi',G:'Regresi',Y:'Prediksi',S:'Sebab-akibat'};
+let EX=null,BEST=0;try{BEST=+localStorage.getItem('sb_best')||0}catch(e){}
+const exUi=()=>{$('#exBest').textContent='Nilai terbaik: '+(BEST||'-')};
+function exPick(){const by={};BK.forEach((q,i)=>{(by[q[0]]=by[q[0]]||[]).push(i)});const plan={V:1,A:2,P:1,R:2,G:2,Y:1,S:1};let ids=[];Object.keys(plan).forEach(k=>{ids=ids.concat(shuf(by[k]).slice(0,plan[k]))});return shuf(ids)}
+function exStart(){EX={ids:exPick(),i:0,ans:[],t0:Date.now()};$('#exIntro').hidden=true;exShow()}
+function exShow(){
+ const n=EX.ids.length,q=BK[EX.ids[EX.i]],b=$('#exBody');
+ b.innerHTML='<div class="card reveal"><div class="bar" role="progressbar" aria-label="Progres ujian"><i style="width:'+Math.round(EX.i/n*100)+'%"></i></div><div class="q"><span class="tag">Soal '+(EX.i+1)+' dari '+n+'</span><span class="tag">'+TL[q[0]]+'</span><br>'+q[2]+'</div><div id="exIn"></div><p><button class="btn" id="exNext" type="button" disabled>'+(EX.i==n-1?'Selesai':'Lanjut')+'</button></p></div>';
+ const inn=$('#exIn'),nx=$('#exNext');
+ if(q[3]){const bs=[];q[3].forEach((t,j)=>{const x=document.createElement('button');x.type='button';x.className='opt';x.textContent=String.fromCharCode(65+j)+'. '+t;x.onclick=()=>{bs.forEach(y=>y.classList.remove('sel'));x.classList.add('sel');EX.ans[EX.i]=j;nx.disabled=false};bs.push(x);inn.appendChild(x)})}
+ else{inn.innerHTML='<input type="text" inputmode="decimal" size="12" id="exV" aria-label="Jawaban">';const v=$('#exV');v.oninput=()=>{EX.ans[EX.i]=v.value;nx.disabled=!v.value.trim()};v.onkeydown=e=>{if(e.key=='Enter'&&!nx.disabled)nx.click()};v.focus()}
+ nx.onclick=()=>{EX.i++;EX.i<n?exShow():exEnd()};scrollTo(0,0)}
+let CERTX='';
+function certNo(nm,sc){let h=0;for(const ch of nm+sc)h=(h*31+ch.charCodeAt(0))%10007;return 'SB-'+new Date().getFullYear()+'-'+('0000'+((h*13+sc)%10000)).slice(-4)}
+function certSvg(nm,sc,pr){
+ const d=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),
+ T=(x,y,sz,fill,txt,ex)=>'<text x="'+x+'" y="'+y+'" text-anchor="middle" style="font:'+sz+' Georgia,serif;fill:'+fill+';'+(ex||'')+'">'+txt+'</text>';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 566" class="cert" role="img" aria-label="Sertifikat">'
+ +'<defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B1437"/><stop offset=".55" stop-color="#2A1B7A"/><stop offset="1" stop-color="#6B3FE0"/></linearGradient><radialGradient id="cs" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#FFE9A8"/><stop offset="1" stop-color="#F2A33A"/></radialGradient></defs>'
+ +'<rect width="800" height="566" fill="#FFFDF7"/>'
+ +'<circle cx="690" cy="470" r="150" fill="none" stroke="#7C5CFF" stroke-opacity=".08" stroke-width="2"/><circle cx="690" cy="470" r="105" fill="none" stroke="#22D3EE" stroke-opacity=".12" stroke-width="2"/><circle cx="110" cy="130" r="120" fill="none" stroke="#FFB547" stroke-opacity=".14" stroke-width="2"/>'
+ +'<rect x="14" y="14" width="772" height="538" rx="20" fill="none" stroke="url(#cg)" stroke-width="7"/><rect x="30" y="30" width="740" height="506" rx="12" fill="none" stroke="#FFB547" stroke-width="1.5"/>'
+ +'<path d="M31 31H121A90 90 0 0 1 31 121Z" fill="#7C5CFF" fill-opacity=".14"/><path d="M769 31H679A90 90 0 0 0 769 121Z" fill="#22D3EE" fill-opacity=".16"/><path d="M31 535H121A90 90 0 0 0 31 445Z" fill="#FFB547" fill-opacity=".2"/><path d="M769 535H679A90 90 0 0 1 769 445Z" fill="#FF5C8A" fill-opacity=".14"/>'
+ +T(400,62,'700 13px','#2A1B7A','SMA NEGERI 4 MEDAN','letter-spacing:3px')+T(400,80,'12px','#51627C','Media Pembelajaran Interaktif Matematika · Fase F')
+ +'<path d="M400 106C397 92 385 88 376 91C379 101 389 108 400 106Z" fill="#46C98A"/><path d="M400 106C403 92 415 88 424 91C421 101 411 108 400 106Z" fill="#2FA36B"/><circle cx="400" cy="128" r="26" fill="#FFD166"/><circle cx="391" cy="126" r="2.8" fill="#13233F"/><circle cx="409" cy="126" r="2.8" fill="#13233F"/><path d="M390 135Q400 144 410 135" stroke="#13233F" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+ +T(400,208,'700 40px','#2A1B7A','SERTIFIKAT','letter-spacing:6px')+T(400,232,'15px','#51627C','Penyelesaian Ujian Akhir · Materi Statistik Bivariat')
+ +T(400,264,'italic 14px','#51627C','diberikan kepada')+T(400,313,'italic 700 40px','#13233F',esc(nm||'Peserta Didik'))
+ +'<line x1="210" y1="326" x2="590" y2="326" stroke="#FFB547" stroke-width="2"/>'
+ +T(400,352,'13.5px','#13233F','telah menyelesaikan Ujian Akhir materi Statistik Bivariat (asosiasi dua variabel, diagram')
+ +T(400,370,'13.5px','#13233F','pencar, korelasi, garis regresi, prediksi, dan sebab-akibat) dengan hasil berikut.')
+ +'<path d="M126 488L116 528L137 518L148 534L152 490Z" fill="#6B3FE0"/><path d="M174 488L184 528L163 518L152 534L148 490Z" fill="#8B6BFF"/><circle cx="150" cy="450" r="44" fill="url(#cs)" stroke="#fff" stroke-width="3"/><circle cx="150" cy="450" r="37" fill="none" stroke="#B9770E" stroke-width="1.5" stroke-dasharray="3 3"/>'
+ +T(150,438,'11px','#7A4A06','NILAI','letter-spacing:2px')+T(150,470,'700 32px','#13233F',sc)
+ +T(375,420,'12px','#51627C','Predikat')+T(375,448,'700 17px','#19A27D',esc(pr))+T(375,472,'12px','#51627C',esc(CERTX))
+ +T(640,410,'12px','#13233F',esc(DEV.kota)+', '+d)+T(640,428,'11.5px','#51627C','Wakil Kepala Sekolah')+T(640,444,'11.5px','#51627C','Bidang Kurikulum')
+ +'<line x1="535" y1="492" x2="745" y2="492" stroke="#13233F" stroke-width="1"/>'+T(640,510,'700 14px','#13233F',esc(DEV.nama))
+ +T(375,522,'10px','#8A97B8','No. '+certNo(nm||'',sc),'letter-spacing:1px')
+ +'</svg>'}
+function certDl(nm,sc,pr){
+ const img=new Image();
+ img.onerror=()=>toast('Gagal membuat gambar sertifikat');
+ img.onload=()=>{const c=document.createElement('canvas');c.width=1600;c.height=1132;c.getContext('2d').drawImage(img,0,0,1600,1132);
+  c.toBlob(async bl=>{
+   try{const dl=(window.claude&&claude.use)?await claude.use('downloads'):null;
+    if(!dl||!bl){toast('Unduhan belum tersedia di tampilan ini. Gunakan tangkapan layar.');return}
+    await dl.save({filename:'sertifikat-statistik-bivariat.png',data:bl});toast('Sertifikat tersimpan 🎓')}
+   catch(e){if(!e||e.code!='declined')toast('Sertifikat tidak bisa disimpan. Gunakan tangkapan layar.')}
+  },'image/png')};
+ img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(certSvg(nm,sc,pr))}
+
+/* ===== Riwayat ===== */
+let RW=[];try{RW=JSON.parse(localStorage.getItem('sb_riwayat_v1')||'[]')}catch(e){}
+let RWDB=null,RWOK=null,RWID=null;
+(async()=>{try{RWDB=await claude.use('db');const u=await claude.use('user');RWID=u?await u.id():null;if(!RWID)RWDB=null}catch(e){RWDB=null}RWUi()})();
+function RWUi(){
+ const t=$('#rwtab');if(!t)return;
+ t.innerHTML='<tr><th>Waktu</th><th>Kegiatan</th><th>Hasil</th></tr>'+(RW.length?RW.slice().reverse().slice(0,25).map(r=>'<tr><td>'+esc(new Date(r.t).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}))+'</td><td>'+esc(r.jenis)+'</td><td>'+esc(r.hasil)+'</td></tr>').join(''):'<tr><td colspan="3" class="mute">Belum ada riwayat. Selesaikan lab atau ujian akhir.</td></tr>');
+ $('#rwnote').textContent='Riwayat disimpan di perangkat ini'+(RWDB?(RWOK===false?'. Pengiriman ke guru gagal, riwayat tetap tersimpan di sini.':' dan dikirim ke buku nilai guru.'):'.')}
+function riw(jenis,hasil,nilai){
+ const r={t:new Date().toISOString(),nama:NAME||'Tanpa nama',jenis:jenis,hasil:hasil,nilai:nilai==null?'':nilai};
+ RW.push(r);if(RW.length>100)RW.shift();try{localStorage.setItem('sb_riwayat_v1',JSON.stringify(RW))}catch(e){}
+ if(RWDB){RWDB.doc('riwayat/'+RWID).set({nama:NAME||'Tanpa nama',diperbarui:r.t,entri:RW.slice(-50)}).then(()=>{RWOK=true;RWUi()}).catch(()=>{RWOK=false;RWUi()})}
+ RWUi()}
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='rwdl'){const q=v=>'"'+String(v).replace(/"/g,'""')+'"';const csv='Waktu,Nama,Kegiatan,Hasil,Nilai\n'+RW.map(r=>[r.t,r.nama,r.jenis,r.hasil,r.nilai].map(q).join(',')).join('\n');
+ claude.use('downloads').then(d=>{if(!d){toast('Unduhan tidak tersedia di tampilan ini');return}return d.save({filename:'riwayat-statistik-bivariat.csv',data:csv})}).catch(()=>{})}});
+function exEnd(){
+ const n=EX.ids.length;let ok=0;const by={},wrong=[];
+ EX.ids.forEach((id,i)=>{const q=BK[id],a=EX.ans[i];let c;
+  if(q[3])c=a===q[4];else{const v=parseFloat(String(a).replace(',','.').replace(/[^0-9.\-]/g,''));c=!isNaN(v)&&Math.abs(v-q[4])<.01}
+  const t=by[q[0]]=by[q[0]]||[0,0];t[1]++;if(c){ok++;t[0]++;award('b'+id,true)}else wrong.push([q,a])});
+ const sc=Math.round(ok/n*100),sec=Math.round((Date.now()-EX.t0)/1000);riw('Ujian akhir','Benar '+ok+' dari '+n+' soal ('+Object.keys(by).map(k=>TLN[k]+' '+by[k][0]+'/'+by[k][1]).join('; ')+')',sc);
+ if(sc>BEST){BEST=sc;try{localStorage.setItem('sb_best',BEST)}catch(e){}}exUi();CERTX='Topik dikuasai: '+Object.keys(by).filter(k=>by[k][0]==by[k][1]).length+' dari '+Object.keys(by).length;
+ const pr=sc>=90?'Sangat Baik · Juara Statistik':sc>=80?'Baik':sc>=70?'Cukup Baik':'Perlu berlatih lagi',circ=2*Math.PI*52;
+ let h='<div class="card reveal"><div class="gh"><svg viewBox="0 0 120 120" style="width:120px;flex:none" role="img" aria-label="Nilai '+sc+'"><circle cx="60" cy="60" r="52" fill="none" stroke="#E6EEFB" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="#19C79A" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+circ*(1-sc/100)+'" transform="rotate(-90 60 60)"/><text x="60" y="69" text-anchor="middle" style="font-size:30px;font-weight:800;fill:#13233F">'+sc+'</text></svg><div><h2>'+pr+'</h2><p>Benar '+ok+' dari '+n+' soal · waktu '+Math.floor(sec/60)+' menit '+sec%60+' detik.<br>'+(sc>=90?'Luar biasa! Kamu layak jadi juara statistik. 🏆':sc>=70?'Bagus sekali! Sedikit lagi menuju sempurna. 🌟':'Semangat! Pelajari pembahasannya lalu coba lagi, kamu pasti bisa. 💪')+'</p></div></div>';
+ h+='<h3>Penguasaan per topik</h3>'+Object.keys(by).map(k=>'<div class="tb"><span class="l">'+TLN[k]+'</span><div class="bar"><i style="width:'+Math.round(by[k][0]/by[k][1]*100)+'%"></i></div><span>'+by[k][0]+'/'+by[k][1]+'</span></div>').join('');
+ const weak=Object.keys(by).filter(k=>by[k][0]<by[k][1]).map(k=>TLN[k]);
+ h+='<p style="margin-top:10px">'+(weak.length?'Perlu diperkuat: <b>'+weak.join(', ')+'</b>. <button class="btn alt" data-go="materi" type="button">Buka materi</button>':'Semua topik dikuasai. Hebat!')+'</p></div>';
+ if(sc>=70)h+='<div class="card reveal"><h2>🎓 Sertifikat</h2><label for="cn">Nama di sertifikat</label><div class="row"><input type="text" id="cn" maxlength="30" value="'+esc(NAME)+'"><button class="btn" id="cdl" type="button">⬇️ Unduh sertifikat</button></div><div id="cprev"></div></div>';
+ if(wrong.length)h+='<div class="card reveal"><h2>Pembahasan soal yang belum tepat</h2>'+wrong.map(([q,a])=>'<div class="ex"><b>'+q[2]+'</b><br>Jawabanmu: '+esc(q[3]?(a==null?'-':String.fromCharCode(65+a)+'. '+q[3][a]):(a||'-'))+' · Kunci: '+(q[3]?String.fromCharCode(65+q[4])+'. '+q[3][q[4]]:q[4])+'<br>'+M(q[5])+'</div>').join('')+'</div>';
+ h+='<p class="row"><button class="btn" id="exAgain" type="button">🔁 Ulangi ujian</button><button class="btn alt" data-go="kebun" type="button">🌱 Lihat kebun</button></p>';
+ $('#exBody').innerHTML=h;scrollTo(0,0);
+ if(sc>=70){const rc=()=>{$('#cprev').innerHTML=certSvg($('#cn').value.trim(),sc,pr)};rc();$('#cn').oninput=rc;$('#cdl').onclick=()=>certDl($('#cn').value.trim(),sc,pr)}
+ $('#exAgain').onclick=exStart;toast(ok+' dari '+n+' benar. Kebunmu diperbarui.');if(sc==100)boom()}
+$('#exGo').onclick=exStart;exUi();
+$('#exEg').onclick=()=>{const b=$('#exEgBox');if(b.innerHTML){b.innerHTML='';$('#exEg').textContent='👀 Lihat contoh sertifikat';return}CERTX='Contoh tampilan';b.innerHTML='<p class="mute">Contoh tampilan dengan namamu. Sertifikat asli dapat diunduh setelah nilai ujian akhir 70 ke atas.</p>'+certSvg(NAME||'Nama Peserta Didik',100,'Sangat Baik · Juara Statistik');$('#exEg').textContent='Tutup contoh sertifikat'};
+/* ===== Pujian dan semangat ===== */
+const PUJI=['Mantap! Jawabanmu tepat. 🎉','Keren, kamu paham konsepnya! ⭐','Luar biasa! Pertahankan ya. 🚀','Tepat sekali! Kebunmu makin subur. 🌱','Hebat! Kamu makin jago statistik. 🏅','Betul! Otakmu lagi on fire. 🔥'];
+const SEMANGAT=['Hampir! Coba cek lagi langkahnya. 💪','Tidak apa-apa, salah itu bagian dari belajar. 🌈','Baca pembahasannya lalu coba lagi. 📘','Kamu pasti bisa, ulangi pelan-pelan. ✨','Jangan menyerah, tiap kesalahan bikin makin paham. 🌟'];
+let streak=0,cht=null;
+function oops(){if(!sfxOn||!initAudio())return;if(ctx.resume)ctx.resume();const t=ctx.currentTime;tone(67,t,.3,.3,'sine',2500,sg);tone(72,t+.14,.35,.3,'sine',2500,sg);tone(76,t+.28,.5,.3,'sine',2500,sg)}
+function applause(big){if(!sfxOn||!initAudio())return;if(ctx.resume)ctx.resume();const t=ctx.currentTime,N=big?44:28,D=big?2:1.4,ag=ctx.createGain();ag.gain.value=.9;ag.connect(ctx.destination);
+ for(let i=0;i<N;i++){const s=ctx.createBufferSource();s.buffer=noiseBuf;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=1100+Math.random()*2800;f.Q.value=.8;const g=ctx.createGain(),st=t+(i/N)*D+Math.random()*.05,pk=.5*(1-Math.abs(i/N-.4)*.9)*(.6+Math.random()*.4);
+  g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(pk,st+.004);g.gain.exponentialRampToValueAtTime(.001,st+.075);s.connect(f);f.connect(g);g.connect(ag);s.start(st,Math.random()*.8,.09)}}
+function cheer(ok){
+ streak=ok?streak+1:0;
+ const m=ok?(streak>=3?'Beruntun '+streak+' jawaban benar! 🔥':PUJI[Math.floor(Math.random()*PUJI.length)]):'Tetap semangat! '+SEMANGAT[Math.floor(Math.random()*SEMANGAT.length)];
+ $('#cheerT').textContent=m;$('#cmo').setAttribute('d',ok?'M36 74 Q50 92 64 74':'M40 80 Q50 84 60 80');
+ $('#cheer').classList.add('show');clearTimeout(cht);cht=setTimeout(()=>$('#cheer').classList.remove('show'),2800);
+ if(ok)applause(streak>=3);else oops();return m}
+
+/* ===== Lab maya ===== */
+const D2R=Math.PI/180;let LB=0,LROWS=[],LCUR=null;
+function dragSvg(svg,fn){const mv=e=>{const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;fn((e.clientX-r.left)/r.width*vb.width,(e.clientY-r.top)/r.height*vb.height)};
+ svg.onpointerdown=e=>{if(svg.setPointerCapture)try{svg.setPointerCapture(e.pointerId)}catch(x){}mv(e);svg.onpointermove=mv};
+ svg.onpointerup=svg.onpointercancel=()=>{svg.onpointermove=null}}
+
+const D1=[[2,50],[3,60],[4,65],[5,75],[6,80]];
+function mulb(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const SZ=(()=>{const R=mulb(7),n=30;let zx=[],ze=[];for(let i=0;i<n;i++){zx.push(R()*2-1);ze.push(R()*2-1)}
+ const std=v=>{const m=v.reduce((s,x)=>s+x,0)/v.length;v=v.map(x=>x-m);const s=Math.sqrt(v.reduce((q,x)=>q+x*x,0)/v.length);return v.map(x=>x/s)};
+ zx=std(zx);ze=std(ze);const dot=zx.reduce((s,x,i)=>s+x*ze[i],0)/n;ze=std(ze.map((x,i)=>x-dot*zx[i]));return{zx,ze}})();
+function lab1Draw(){
+ const r=+$('#lr').value;$('#lrv').textContent=fmt(r);const k=Math.sqrt(1-r*r),pts=SZ.zx.map((x,i)=>[50+10*x,50+10*(r*x+k*SZ.ze[i])]),s=ST(pts);
+ scat($('#lsvg'),{pts,xr:[20,80],yr:[20,80],xn:6,yn:6,line:[s.a,s.b]});
+ const ar=r>.1?'positif':r<-.1?'negatif':'tidak ada',ks=Math.abs(r)>=.7?'kuat':Math.abs(r)>=.4?'sedang':Math.abs(r)>.1?'lemah':'hampir tidak ada';
+ $('#lout').innerHTML='<div>r<b>'+fmt3(s.r)+'</b></div><div>Arah<b>'+ar+'</b></div><div>Kekuatan<b>'+ks+'</b></div>';LCUR=[fmt(r),ar,ks]}
+function lab2Draw(){
+ const a=+$('#la2').value,b=+$('#lb2').value,s=ST(D1);let sse=0;D1.forEach(p=>{sse+=(p[1]-a-b*p[0])**2});
+ $('#la2v').textContent=a;$('#lb2v').textContent=fmt(b);
+ scat($('#lsvg'),{pts:D1,xr:[0,8],yr:[30,100],xn:4,yn:7,xl:'Jam belajar (x)',yl:'Nilai (y)',line:[a,b],res:true});
+ const best=Math.abs(sse-s.sse)<.01;
+ $('#lout').innerHTML='<div>Garismu<b>ŷ = '+fmt(a)+' + '+fmt(b)+'x</b></div><div>Jumlah kuadrat residu<b>'+fmt(Math.round(sse*100)/100)+'</b></div><div>Nilai terkecil yang mungkin<b>'+fmt(s.sse)+'</b></div>'+(best?'<div>🎯<b>Garis terbaik!</b></div>':'');
+ LCUR=[a,fmt(b),fmt(Math.round(sse*100)/100)]}
+const B3=[[1,24],[2,31],[3,33],[4,41],[5,44],[6,52],[7,55],[8,63],[9,64]];let M3=null;
+function lab3Draw(){
+ const px=+$('#lpx').value,py=+$('#lpy').value;$('#lpxv').textContent=fmt(px);$('#lpyv').textContent=py;
+ const all=B3.concat([[px,py]]),s=ST(all),s0=ST(B3);
+ M3=scat($('#lsvg'),{pts:all,xr:[0,16],yr:[0,100],xn:8,yn:5,xl:'x',yl:'y',line:[s.a,s.b],line2:[s0.a,s0.b],hl:all.length-1});
+ $('#lout').innerHTML='<div>r (dengan titik P)<b>'+fmt3(s.r)+'</b></div><div>Gradien b<b>'+fmt(s.b)+'</b></div><div>r tanpa P<b>'+fmt3(s0.r)+'</b></div><div>b tanpa P<b>'+fmt(s0.b)+'</b></div>';
+ LCUR=[fmt(px),py,fmt3(s.r),fmt(s.b)]}
+function lab4Draw(){
+ const x=+$('#lx').value,s=ST(D1),y=s.a+s.b*x,jn=x>=2&&x<=6?'Interpolasi':'Ekstrapolasi';$('#lxv').textContent=fmt(x);
+ scat($('#lsvg'),{pts:D1,xr:[0,14],yr:[0,160],xn:7,yn:4,xl:'Jam belajar (x)',yl:'Nilai (y)',line:[s.a,s.b],mark:[x,y]});
+ $('#lout').innerHTML='<div>x<b>'+fmt(x)+' jam</b></div><div>ŷ = 36 + 7,5x<b>'+fmt(y)+'</b></div><div>Jenis prediksi<b>'+jn+'</b></div>'+(y>100?'<div>⚠️<b>Melebihi nilai maksimum 100</b></div>':'');
+ LCUR=[fmt(x),fmt(y),jn]}
+function lab5Draw(){
+ const c1=+$('#lc1').value,c2=+$('#lc2').value,p1=c1/60*100,p2=c2/40*100,sel=Math.abs(p1-p2),lb=sel<10?'hampir tidak ada':sel<25?'sedang':'kuat';
+ $('#lc1v').textContent=c1;$('#lc2v').textContent=c2;
+ const bh=p=>p*1.6,bar=(x,p,col,t,n)=>'<rect x="'+x+'" y="'+(200-bh(p))+'" width="80" height="'+bh(p)+'" rx="8" fill="'+col+'"/><text x="'+(x+40)+'" y="'+(192-bh(p))+'" text-anchor="middle" style="font-weight:700">'+fmt(Math.round(p*10)/10)+'%</text><text x="'+(x+40)+'" y="220" text-anchor="middle" style="font-size:11px">'+t+'</text><text x="'+(x+40)+'" y="235" text-anchor="middle" style="font-size:10px">('+n+')</text>';
+ $('#lsvg').setAttribute('viewBox','0 0 320 250');
+ $('#lsvg').innerHTML='<path d="M30 200H300M30 200V30" stroke="#fff" stroke-opacity=".5" fill="none"/>'+[0,50,100].map(v=>'<text x="26" y="'+(204-bh(v))+'" text-anchor="end" style="font-size:10px">'+v+'%</text>').join('')+bar(70,p1,'#22D3EE','Sarapan','60 siswa')+bar(190,p2,'#FFB547','Tidak sarapan','40 siswa');
+ $('#lout').innerHTML='<div>Sarapan: baik<b>'+c1+' dari 60</b></div><div>Tidak sarapan: baik<b>'+c2+' dari 40</b></div><div>Selisih persentase<b>'+fmt(Math.round(sel*10)/10)+' poin</b></div><div>Asosiasi<b>'+lb+'</b></div>';
+ LCUR=[fmt(Math.round(p1*10)/10)+'%',fmt(Math.round(p2*10)/10)+'%',fmt(Math.round(sel*10)/10),lb]}
+const LABS=[
+{n:'🔭 Lab 1: Pola diagram pencar dan r',goal:'Menemukan hubungan arah dan kekuatan pola titik dengan nilai koefisien korelasi r.',
+ steps:['Geser nilai r dari −1 sampai 1.','Amati arah dan kerapatan titik.','Catat data minimal 3 kali, termasuk satu nilai r negatif dan satu mendekati 0.','Bandingkan kolom r, arah, dan kekuatan, lalu jawab kesimpulan.'],
+ ctl:'<label for="lr">Nilai r: <span id="lrv"></span></label><input type="range" id="lr" min="-1" max="1" step="0.1" value="0.8">',
+ cols:['r','Arah','Kekuatan'],
+ init(){$('#lr').addEventListener('input',lab1Draw);lab1Draw()},
+ q:{t:'Apa yang terjadi pada titik-titik ketika |r| makin mendekati 1?',o:['Titik makin menyebar acak','Titik makin rapat mengikuti garis lurus','Titik membentuk lingkaran','Garis menjadi mendatar'],k:1,why:'Makin dekat |r| ke 1, titik makin rapat di sekitar garis lurus. Tanda r menentukan arah: positif naik, negatif turun.'}},
+{n:'📏 Lab 2: Mencari garis terbaik',goal:'Menemukan garis yang membuat jumlah kuadrat residu paling kecil.',
+ steps:['Atur a (titik potong) dan b (gradien) dengan penggeser.','Amati garis merah pendek: itu residu tiap titik.','Cari a dan b sehingga jumlah kuadrat residu mencapai nilai terkecil yang mungkin.','Catat data minimal 3 kali, lalu jawab kesimpulan.'],
+ ctl:'<label for="la2">Konstanta a: <span id="la2v"></span></label><input type="range" id="la2" min="20" max="50" step="1" value="30"><label for="lb2">Gradien b: <span id="lb2v"></span></label><input type="range" id="lb2" min="3" max="12" step="0.5" value="5">',
+ cols:['a','b','Jumlah kuadrat residu'],
+ init(){['la2','lb2'].forEach(i=>$('#'+i).addEventListener('input',lab2Draw));lab2Draw()},
+ q:{t:'Garis regresi terbaik dipilih sehingga …',o:['jumlah kuadrat residu sekecil mungkin','semua titik tepat berada di garis','garis selalu melalui titik (0, 0)','jumlah residu terbesar'],k:0,why:'Metode kuadrat terkecil memilih garis dengan jumlah kuadrat residu paling kecil. Untuk data ini a = 36 dan b = 7,5 dengan jumlah kuadrat residu 7,5.'}},
+{n:'⚠️ Lab 3: Pengaruh pencilan',goal:'Mengamati bagaimana satu titik yang jauh dari pola mengubah r dan garis regresi.',
+ steps:['Titik merah P dapat diseret atau diatur dengan penggeser.','Garis putus-putus putih adalah garis tanpa P.','Pindahkan P ke dekat pola, lalu jauh dari pola. Catat data minimal 3 kali.','Bandingkan r dan b dengan dan tanpa P, lalu jawab kesimpulan.'],
+ ctl:'<label for="lpx">Posisi x titik P: <span id="lpxv"></span></label><input type="range" id="lpx" min="0" max="16" step="0.5" value="12"><label for="lpy">Posisi y titik P: <span id="lpyv"></span></label><input type="range" id="lpy" min="0" max="100" step="1" value="20"><p class="mute">Seret titik P pada gambar, atau gunakan penggeser.</p>',
+ cols:['x titik P','y titik P','r','b'],
+ init(){['lpx','lpy'].forEach(i=>$('#'+i).addEventListener('input',lab3Draw));dragSvg($('#lsvg'),(x,y)=>{if(!M3)return;$('#lpx').value=Math.max(0,Math.min(16,Math.round(M3.ix(x)*2)/2));$('#lpy').value=Math.max(0,Math.min(100,Math.round(M3.iy(y))));lab3Draw()});lab3Draw()},
+ q:{t:'Apa dampak satu titik yang jauh dari pola data (pencilan)?',o:['r dan gradien garis dapat berubah sangat besar','Tidak ada perubahan sama sekali','r selalu menjadi 1','Garis selalu menjadi mendatar'],k:0,why:'Pencilan dapat menarik garis regresi dan mengubah r secara berarti. Karena itu pencilan perlu diperiksa sebelum menarik kesimpulan.'}},
+{n:'🎯 Lab 4: Prediksi dan ekstrapolasi',goal:'Membedakan interpolasi dan ekstrapolasi serta memeriksa kewajaran prediksi.',
+ steps:['Geser x (jam belajar) pada garis ŷ = 36 + 7,5x.','Data asli berada di x antara 2 dan 6.','Catat data minimal 3 kali: dua di dalam rentang dan satu jauh di luar.','Perhatikan jenis prediksi dan nilai ŷ, lalu jawab kesimpulan.'],
+ ctl:'<label for="lx">Jam belajar x: <span id="lxv"></span></label><input type="range" id="lx" min="0" max="14" step="0.5" value="4">',
+ cols:['x','ŷ','Jenis'],
+ init(){$('#lx').addEventListener('input',lab4Draw);lab4Draw()},
+ q:{t:'Bagaimana sebaiknya kita memandang prediksi di luar rentang data (ekstrapolasi)?',o:['Hati-hati, karena pola belum tentu berlanjut','Selalu lebih akurat daripada interpolasi','Tidak pernah boleh dihitung','Selalu sama dengan data asli'],k:0,why:'Di luar rentang data, kita tidak tahu apakah pola linear masih berlaku. Contohnya, x = 14 memberi ŷ = 141, melebihi nilai maksimum 100.'}},
+{n:'📊 Lab 5: Tabel dua arah dan asosiasi',goal:'Menilai asosiasi dua variabel kategorik dengan membandingkan persentase.',
+ steps:['Atur banyak siswa berkonsentrasi baik pada kelompok sarapan (dari 60) dan tidak sarapan (dari 40).','Bandingkan persentase kedua kelompok pada diagram batang.','Catat data minimal 3 kali, termasuk satu kasus dengan persentase hampir sama.','Perhatikan selisih persentase dan asosiasi, lalu jawab kesimpulan.'],
+ ctl:'<label for="lc1">Sarapan, konsentrasi baik: <span id="lc1v"></span> dari 60</label><input type="range" id="lc1" min="0" max="60" step="1" value="45"><label for="lc2">Tidak sarapan, konsentrasi baik: <span id="lc2v"></span> dari 40</label><input type="range" id="lc2" min="0" max="40" step="1" value="16">',
+ cols:['% sarapan','% tidak sarapan','Selisih','Asosiasi'],
+ init(){['lc1','lc2'].forEach(i=>$('#'+i).addEventListener('input',lab5Draw));lab5Draw()},
+ q:{t:'Kapan dua variabel kategorik dikatakan hampir tidak berasosiasi?',o:['Persentase di tiap kelompok hampir sama','Jumlah anggota kedua kelompok sama','Salah satu kelompok kosong','Persentasenya selalu 50%'],k:0,why:'Jika persentase suatu kategori hampir sama di semua kelompok, kategori kelompok tidak banyak memengaruhi hasilnya, sehingga asosiasinya lemah atau tidak ada.'}}];
+function lTable(){const L=LABS[LB];$('#ltab').innerHTML='<tr>'+L.cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>'+(LROWS.length?LROWS.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+L.cols.length+'" class="mute">Belum ada data. Tekan Catat data.</td></tr>')}
+function lConc(){
+ const L=LABS[LB],c=$('#lq'),done=gs.has('L'+LB);
+ if(LROWS.length<3&&!done){c.innerHTML='<h2>🧠 Kesimpulan</h2><p class="mute">Catat minimal 3 data untuk membuka pertanyaan kesimpulan ('+LROWS.length+'/3).</p>';return}
+ c.innerHTML='<h2>🧠 Kesimpulan'+(done?' ✅':'')+'</h2><p class="q">'+L.q.t+'</p><div id="lo"></div><div id="lfb"></div>';
+ const bs=[];L.q.o.forEach((t,j)=>{const b=document.createElement('button');b.type='button';b.className='opt';b.textContent=String.fromCharCode(65+j)+'. '+t;
+  b.onclick=()=>{bs.forEach(x=>{x.disabled=true});const ok=j==L.q.k;bs[L.q.k].classList.add('ok');if(!ok)b.classList.add('bad');
+   const m=cheer(ok);if(ok){if(!gs.has('L'+LB))riw('Lab maya',L.n.replace(/^\S+\s/,'')+' selesai',100);award('L'+LB)}
+   $('#lfb').innerHTML='<div class="fb '+(ok?'ok':'bad')+'"><b>'+m+'</b> '+L.q.why+'</div>'+(ok?'':'<p><button class="btn alt" id="lretry" type="button">Coba lagi</button></p>');
+   if(!ok)$('#lretry').onclick=lConc};
+  bs.push(b);$('#lo').appendChild(b)})}
+function labRender(i){
+ LB=i;LROWS=[];LCUR=null;const L=LABS[i];
+ Array.from($('#lseg').children).forEach((b,j)=>b.setAttribute('aria-pressed',j==i));
+ $('#labBody').innerHTML='<div class="card"><h2>'+L.n+'</h2><p><b>Tujuan:</b> '+L.goal+'</p><ol class="lsteps">'+L.steps.map(x=>'<li>'+x+'</li>').join('')+'</ol></div><div class="card"><svg id="lsvg" viewBox="0 0 300 250" class="sim lab" role="img" aria-label="'+L.n+'"></svg><div class="lctl">'+L.ctl+'</div><div class="res" id="lout"></div><div class="row" style="margin-top:10px"><button class="btn" id="lrec" type="button">📝 Catat data</button><button class="btn alt" id="lclr" type="button">Hapus tabel</button></div><div style="overflow-x:auto"><table class="ltab" id="ltab"></table></div></div><div class="card" id="lq"></div>';
+ L.init();lTable();lConc();
+ $('#lrec').onclick=()=>{if(!LCUR){toast('Geser dulu agar ada data yang valid');return}LROWS.push(LCUR.slice());if(LROWS.length>8)LROWS.shift();lTable();toast('Data dicatat ('+LROWS.length+')');if(LROWS.length<=3)lConc()};
+ $('#lclr').onclick=()=>{LROWS=[];lTable();lConc()}}
+LABS.forEach((L,i)=>{const b=document.createElement('button');b.type='button';b.textContent=L.n.split(':')[0].replace(/^\S+\s/,'')+' '+L.n.split(' ')[0];b.setAttribute('aria-pressed',i==0);b.onclick=()=>labRender(i);$('#lseg').appendChild(b)});
+labRender(0);
+
+renderGarden(-1);
+</script>
+
+</body>
+</html>
+
+</body></html>
